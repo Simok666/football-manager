@@ -21,6 +21,23 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nik',
+        'place_of_birth',
+        'birth_of_date',
+        'address',
+        'school',
+        'class',
+        'father_name',
+        'mother_name',
+        'parents_contact',
+        'weight',
+        'height',
+        'id_positions',
+        'history',
+        'id_contributions',
+        'id_statuses',
+        'strength',
+        'Weakness',
     ];
 
     /**
@@ -42,4 +59,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'id_positions');
+    }
+
+    public function contribution()
+    {
+        return $this->belongsTo(Contribution::class, 'id_contributions');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'id_statuses');
+    }
 }

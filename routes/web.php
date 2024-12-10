@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['suffix' => '.html'], function () {
+
+    Route::get('/{view?}', function ($view = "auth.login") {
+        $view = str_replace(["-", ".html"], [".", ""], $view);
+        if (!view()->exists($view)) {
+            abort(404);
+        }
+
+        return view($view);
+    });
 });

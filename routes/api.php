@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\Backend\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
+    Route::post('register', [UserAuthController::class, 'register']);
+    Route::get('getUser', [AdminController::class, 'getUserAccount']);
+
+    Route::get('getPosition', [AdminController::class, 'getPosition']);
+    Route::get('getContribution', [AdminController::class, 'getContribution']);
+
+    Route::post('userManagement', [AdminController::class, 'userManagement']);
+
 });
+
