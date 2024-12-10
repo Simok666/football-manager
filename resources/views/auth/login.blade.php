@@ -4,12 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Football Manager
-  </title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">{!! "\n" !!}
+  <title>{{ config('app.name') }} - Login</title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
@@ -17,6 +13,8 @@
   <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="{{ asset('assets/vendors/toastify/toastify.css') }}">
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
 </head>
@@ -91,17 +89,23 @@
                 <div class="card-body">
                   <form role="form">
                     <div class="mb-3">
-                      <input type="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email">
+                      <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email" required>
                     </div>
                     <div class="mb-3">
-                      <input type="email" class="form-control form-control-lg" placeholder="Password" aria-label="Password">
+                      <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" required>
                     </div>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="rememberMe">
-                      <label class="form-check-label" for="rememberMe">Remember me</label>
+                    <div class="form-group">
+                      <label for="exampleFormControlSelect1">Pilih Role</label>
+                      <select class="form-control" id="role" required>
+                          <option value="" disabled readonly selected>--- Select Role ---</option>
+                          <option value="admin">Admin</option>
+                          <option value="user">User</option>
+                          <option value="coach">Coach</option>
+                      </select>
+                      </select>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
                     </div>
                   </form>
                 </div>
@@ -130,6 +134,7 @@
   <script src="{{ asset('assets/vendors/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('assets/vendors/toastify/toastify.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
   <script>
@@ -145,6 +150,32 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.1.0') }}"></script>
+  <script src="{{ asset('assets/js/app.js') }}"></script>
+  <script>
+        // if not empty token redirect
+        if (!empty(session('token'))) {
+            window.location.href = "{{ url('dashboard') }}";
+        }
+        // jquery on submit
+        $(document).ready(function() {
+            $('form').submit(function(e) {
+                e.preventDefault();
+                role = $('select[id=role]').val();
+                
+                ajaxData(`{{ url('api/v1/') }}/${role}/login`, 'POST', $(this).serialize(),
+                    function(resp) {
+                        setSession('token',resp.data.token)
+                        setSession('isLogin',true)
+                        window.location = "{{ url('dashboard.html') }}";
+                        
+                    },
+                    function (data) {
+                        
+                    }
+                );
+            });
+        })
+    </script>
 </body>
 
 </html>

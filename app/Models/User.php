@@ -38,6 +38,7 @@ class User extends Authenticatable
         'id_statuses',
         'strength',
         'Weakness',
+        'is_verified'
     ];
 
     /**

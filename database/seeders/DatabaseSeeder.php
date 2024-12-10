@@ -8,6 +8,7 @@ use Database\Seeders\PositionSeeder;
 use Database\Seeders\ContributionSeeder;
 use Database\Seeders\StatusSeeder;
 use Database\Seeders\AdminSeeder;
+use Database\Seeders\CoachSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ContributionSeeder::class);
         $this->call(StatusSeeder::class);
         $this->call(AdminSeeder::class);
+        $this->call(CoachSeeder::class);
     }
 }

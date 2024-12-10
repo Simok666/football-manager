@@ -12,7 +12,6 @@
             "Action"
         ] , 'pagination' => true])
     </div>
-    
 </div>
 
 <div class="modal fade" id="editUserManagement" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

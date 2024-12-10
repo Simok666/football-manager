@@ -27,6 +27,11 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::get('getContribution', [AdminController::class, 'getContribution']);
 
     Route::post('userManagement', [AdminController::class, 'userManagement']);
+    Route::get('getCoach', [AdminController::class, 'getCoachAccount']);
+    Route::post('addUpdateCoach', [AdminController::class, 'addUpdateCoach']);
 
+    Route::post('user/login', [UserAuthController::class, 'login']);
+    Route::post('admin/login', [UserAuthController::class, 'adminLogin']);
+    Route::post('user', [UserAuthController::class, 'getUserAcc'])->middleware('auth:sanctum');
 });
 

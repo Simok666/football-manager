@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Position;
+use App\Models\Coach;
 use App\Models\Contribution;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\CoachResource;
 use App\Http\Resources\PositionResource;
 use App\Http\Resources\ContributionResource;
 use DB;
@@ -28,7 +30,7 @@ class AdminController extends Controller
     public function getUserAccount(Request $request)
     {
         return UserResource::collection(
-            User::when(request()->filled("id"), function ($query){
+            User::with('position', 'contribution', 'status')->when(request()->filled("id"), function ($query){
                 $query->where('id', request("id"));
             })->paginate($request->limit ?? "10")
         );
@@ -75,7 +77,7 @@ class AdminController extends Controller
           DB::beginTransaction();   
           $data = collect($request->repeater)->map(function ($item) use ($user) {
               $userEmail = $user::where('id', $item['id'])->first()->email; 
-            //   dd($user::where('id', $item['id'])->first()->password);
+            
               $user = $user::updateOrCreate(
                   [
                       'id' => $item['id'] ?? null,
@@ -100,24 +102,94 @@ class AdminController extends Controller
                       'id_statuses' => $item['id_statuses'] ?? null,
                       'strength' => $item['strength'] ?? null,
                       'weakness' => $item['weakness'] ?? null,
+                      'is_verified' => true
                   ],
               );
        
-          $token = Password::createToken($user);
-          Mail::to($userEmail)->send(new CustomEmail(
-            "Account Created Now you can login",
-            "Click the link to reset your password: " . url('password/reset', $token)
-          ));
+        //   $token = Password::createToken($user);
+        //   Mail::to($userEmail)->send(new CustomEmail(
+        //     "Account Created Now you can login",
+        //     "Click the link to reset your password: " . url('password/reset', $token)
+        //   ));
 
           DB::commit();
           });
           return response()->json(['message' => 'Data updated successfully'], 201);
         } catch(\Illuminate\Database\QueryException $ex) {
             DB::rollBack();
-            return response()->json(['error' => 'An error occurred creating data: ' . $ex->getMessage()], 400);
+            return response()->json(['error' => 'An error occurred updated data: ' . $ex->getMessage()], 400);
         } catch(\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'An error occurred while creating data: ' . $e->getMessage()], 400);
+            return response()->json(['error' => 'An error occurred while updated data: ' . $e->getMessage()], 400);
         }
+    }
+
+    /**
+     * get list of coach
+     * 
+     * @param $paginate
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function getCoachAccount(Request $request)
+    {
+        return CoachResource::collection(
+            Coach::when(request()->filled("id"), function ($query){
+                $query->where('id', request("id"));
+            })->paginate($request->limit ?? "10")
+        );
+    }   
+
+
+    /**
+     * add or edit data coach
+     * 
+     * @param Request $request
+     * @param Coach $coach
+     */
+    public function addUpdateCoach(Request $request, Coach $coach) {
+        try {
+            DB::beginTransaction();   
+            $data = collect($request->repeater)->map(function ($item) use ($coach) {
+              
+                $coach = $coach::updateOrCreate(
+                    [
+                        'id' => $item['id'] ?? null,
+                    ],
+                    [
+                        'email' => $item['email'],
+                        'name' => $item['name'],
+                        'password' => $item['password'] ?? null,
+                        'phone' => $item['phone'],
+                        'nik' => $item['nik'],
+                        'place_of_birth' => $item['place_of_birth'],
+                        'date_of_birth' => $item['date_of_birth'],
+                        'address' => $item['address'],
+                        'emergeny_contact' => $item['emergeny_contact'],
+                        'weight' => $item['weight'] ,
+                        'height' => $item['height'] ,
+                        'history' => $item['history'] ,
+                        'status' => $item['status'] 
+                    ],
+                );
+               
+                 if ($item['new_id'] == "null") {
+                     Mail::to($item['email'])->send(new CustomEmail(
+                        "Coach Account Created Now you can login",
+                        "Email : " . $item['email'] . " <br/> Password : " .$item['password']
+                    ));
+                 } 
+  
+            DB::commit();
+            });
+            return response()->json(['message' => 'Data updated successfully'], 201);
+          } catch(\Illuminate\Database\QueryException $ex) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred updated data: ' . $ex->getMessage()], 400);
+          } catch(\Exception $e) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred while updated data: ' . $e->getMessage()], 400);
+          }
     }
 }
