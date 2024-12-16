@@ -34,7 +34,7 @@ class UserResource extends JsonResource
             'contribution' => new ContributionResource($this->whenLoaded('contribution')),
             'status' => new StatusResource($this->whenLoaded('status')),
             'strength' => $this->strength,
-            'Weakness' => $this->Weakness,
+            'weakness' => $this->weakness,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

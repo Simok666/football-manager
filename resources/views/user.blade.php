@@ -24,6 +24,9 @@
         </button>
       </div>
       <div class="modal-body">
+      <div id="user-role-note" class="alert alert-warning" style="display: none;">
+          Note: As a user, you cannot modify these fields. Please contact an administrator for updates.
+      </div>
       <form id="form-edit-usermanagement">
             <div class="mb-3">
                 <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
@@ -192,6 +195,49 @@
                     if (index == "image") return;
                     $('#editUserManagement').find(`[data-bind-${index}]`).val(data).attr('value', data);
                 });
+
+                // Get user role from session
+                const userRole = session('role');
+
+                // Disable specific input fields based on role
+                const userFieldsToDisable = [
+                    '[name="repeater[0][weight]"]',
+                    '[name="repeater[0][height]"]',
+                    '[name="repeater[0][id_positions]"]',
+                    '[name="repeater[0][history]"]',
+                    '[name="repeater[0][id_contributions]"]',
+                    '[name="repeater[0][id_statuses]"]',
+                    '[name="repeater[0][strength]"]',
+                    '[name="repeater[0][weakness]"]'
+                ];
+
+                const coachFieldsToDisable = [
+                    '[name="repeater[0][email]"]',
+                    '[name="repeater[0][name]"]',
+                    '[name="repeater[0][nik]"]',
+                    '[name="repeater[0][place_of_birth]"]',
+                    '[name="repeater[0][birth_of_date]"]',
+                    '[name="repeater[0][address]"]',
+                    '[name="repeater[0][school]"]',
+                    '[name="repeater[0][class]"]',
+                    '[name="repeater[0][father_name]"]',
+                    '[name="repeater[0][mother_name]"]',
+                    '[name="repeater[0][parents_contact]"]',
+                    '[name="repeater[0][id_contributions]"]',
+                    '[name="repeater[0][id_statuses]"]',
+                ];
+
+                if (userRole === 'user') {
+                    userFieldsToDisable.forEach(selector => {
+                        $(`#editUserManagement ${selector}`).prop('disabled', true);
+                    });
+                    $('#user-role-note').text('Note: As a user, you cannot modify these fields. Please contact an administrator for updates.').show();
+                } else if (userRole === 'coach') {
+                    coachFieldsToDisable.forEach(selector => {
+                        $(`#editUserManagement ${selector}`).prop('disabled', true);
+                    });
+                    $('#user-role-note').text('Note: As a coach, you cannot modify these fields. Please contact an administrator for updates.').show();
+                }
 
             },
             function() {

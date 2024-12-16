@@ -8,14 +8,18 @@ use App\Models\User;
 use App\Models\Position;
 use App\Models\Coach;
 use App\Models\Contribution;
+use App\Models\Schedule;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\CoachResource;
+use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\PositionResource;
 use App\Http\Resources\ContributionResource;
 use DB;
 use App\Mail\CustomEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -160,7 +164,7 @@ class AdminController extends Controller
                     [
                         'email' => $item['email'],
                         'name' => $item['name'],
-                        'password' => $item['password'] ?? null,
+                        'password' => Hash::make($item['password']) ?? null,
                         'phone' => $item['phone'],
                         'nik' => $item['nik'],
                         'place_of_birth' => $item['place_of_birth'],
@@ -173,7 +177,7 @@ class AdminController extends Controller
                         'status' => $item['status'] 
                     ],
                 );
-               
+                 
                  if ($item['new_id'] == "null") {
                      Mail::to($item['email'])->send(new CustomEmail(
                         "Coach Account Created Now you can login",
@@ -191,5 +195,167 @@ class AdminController extends Controller
               DB::rollBack();
               return response()->json(['error' => 'An error occurred while updated data: ' . $e->getMessage()], 400);
           }
+    }
+
+    /**
+     * add or edit data schedule
+     * 
+     * @param Request $request
+     * @param Schedule $schedule
+     */
+    public function addSchedule(Request $request, Schedule $schedule) {
+        try {
+            DB::beginTransaction(); 
+            $usersEmails = User::pluck('email')->toArray();
+            $data = collect($request->repeater)->map(function ($item) use ($schedule, $usersEmails) {
+                
+                if ($item['event_name'] == 'edit_event' || $item['event_name'] == 'add_event' ) {
+                    $schedule = $schedule::updateOrCreate(
+                        [
+                            // 'id' => $item['id'] ?? null,
+                            'date_activity' => $item['date_activity'],
+                            // 'activity' => $item['activity'],
+                        ],
+                        [
+                            'activity' => $item['activity'],
+                            'date_activity' => $item['date_activity'],
+                            'time_start_activity' => $item['time_start_activity'],
+                            'time_end_activity' => $item['time_end_activity'],
+                            'location' => $item['location'],
+                        ],
+                    );
+                     
+                     if ($item['new_id'] == "null") {
+                        foreach ($usersEmails as $userEmail) {
+                            Mail::to($userEmail)->send(new CustomEmail(
+                                "New Schedule Created mark your attendance",
+                                "Please mark your attendance for the activity : " . $item['activity']
+                            ));
+                        }
+                     } 
+                } else if ($item['event_name'] == 'add_participants') {
+                    
+                    $schedule->addParticipants($item['id'] ,$item['user_id'], 'participant');
+                } else if ($item['event_name'] == 'add_documentation') {
+                    
+                    $schedule->uploadDocumentation($item['id'] ,$item['example']);
+                    foreach ($usersEmails as $userEmail) {
+                        Mail::to($userEmail)->send(new CustomEmail(
+                            "New decumentation added at : ". $item['activity'],
+                            "check User Attendance menu if you want to download the documentation"
+                        ));
+                    }
+                }
+  
+            DB::commit();
+            });
+            return response()->json(['message' => 'Data created successfully'], 201);
+          } catch(\Illuminate\Database\QueryException $ex) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred created data: ' . $ex->getMessage()], 400);
+          } catch(\Exception $e) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred while created data: ' . $e->getMessage()], 400);
+          }
+    }
+
+    /**
+     * get list of schedule
+     * 
+     * @param $paginate
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function getSchedule(Request $request)
+    {
+        return ScheduleResource::collection(
+            Schedule::with('attendances.user')
+            ->when(request()->filled("id"), function ($query){
+                $query->where('id', request("id"));
+            })->paginate($request->limit ?? "10")
+        );
+    }
+
+    /**
+     * mark attendance
+     * 
+     * @param Request $request
+     * @param Schedule $schedule
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function markAttendance(Request $request, Schedule $schedule)
+    {
+        try {
+            
+            DB::beginTransaction();   
+            $scheduleId = $request->id;
+            $userId = $request->user()->id;
+            $markAttendance = $request->attendance == "true" ? true : false;
+            $attendance_status = $markAttendance == true ? "Hadir" : "Tidak Hadir";
+            $schedule = $schedule->markUserAttendance($scheduleId, $userId, $markAttendance, $attendance_status);
+            
+            DB::commit();
+            return response()->json(['message' => 'Data updated successfully'], 201);
+          } catch(\Illuminate\Database\QueryException $ex) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred updated data: ' . $ex->getMessage()], 400);
+          } catch(\Exception $e) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred while updated data: ' . $e->getMessage()], 400);
+          }        
+    }
+
+    /**
+     * get Image Documentation
+     * 
+     * @param int $scheduleId
+     * @param Schedule $schedule
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function getImageDocumentation($scheduleId, Schedule $schedule) {
+        try {
+            $documentations = $schedule->getDocumentations($scheduleId);
+            
+            return response()->json([
+                'status' => 'success',
+                'data' => $documentations
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve documentation: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * get Image Documentation
+     * 
+     * @param Request $request
+     * @param Schedule $schedule
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function removeImageDocumentation(Request $request, Schedule $schedule) {
+        try {
+           
+            $remove = $schedule->removeDocumentation($request->schedule_id, $request->doc_id);
+            
+            return response()->json([
+                'status' => 'remove success',
+                'data' => $remove
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to remove documentation: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

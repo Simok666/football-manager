@@ -10,6 +10,7 @@ use App\Http\Resources\UserAccountResource;
 use App\Http\Resources\AuthResource;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Coach;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\CustomEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Crypt;
 
 class UserAuthController extends Controller
 {
@@ -98,6 +100,18 @@ class UserAuthController extends Controller
             ]);
         }
         $user->role = "user";
+
+        $coachEmails = Coach::pluck('email')->toArray();
+        
+        if($user->id_positions == null || $user->history == null || $user->strength == null || $user->weakness == null) {
+            foreach ($coachEmails as $coachEmail) {
+                Mail::to($coachEmail)->send(new CustomEmail(
+                    "New User Login with Incomplete Profile",
+                    "A user has logged in with an incomplete profile. Please review and assist.\n\n" .
+                    "Click here to view user details: " . url('user.html')
+                ));
+            }
+        }
         
         return new AuthResource($user);
     }
@@ -126,5 +140,33 @@ class UserAuthController extends Controller
         $admin->role = "admin";
         
         return new AuthResource($admin);
+    }
+
+    /**
+     * function login coach
+     * 
+     * @param UserLoginRequest $request
+     * 
+     */
+    public function coachLogin(UserLoginRequest $request) {
+        
+        $coach = Coach::where('email', $request->email)->first();
+
+        if($coach == null) {
+            throw ValidationException::withMessages([
+                'email' => ['User Email not found'],
+            ]);
+        }
+
+        // Use Hash::check for password verification
+        if (!Hash::check($request->password, $coach->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect'],
+            ]);
+        }
+
+        $coach->role = "coach";
+        
+        return new AuthResource($coach);
     }
 }

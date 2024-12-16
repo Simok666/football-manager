@@ -32,7 +32,7 @@
       <div class="modal-body">
       <form id="form-add-coachmanagement">
             <div class="mb-3">
-                <input type="hidden" name="repeater[0][new_id]" class="form-control" data-bind-id value="null">
+                <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="null">
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email"  required>
             </div>
             <div class="mb-3">
@@ -93,12 +93,15 @@
       <div class="modal-body">
       <form id="form-edit-coachmanagement">
             <div class="mb-3">
-                <input type="hidden" name="repeater[0][new_id]" class="form-control" data-bind-id value="not_null">
+                <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="not_null">
                 <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email" data-bind-email value="" required>
             </div>
             <div class="mb-3">
                 <input type="text" name="repeater[0][phone]" class="form-control" placeholder="No. Handphone" aria-label="No. Handphone" data-bind-phone value="" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" name="repeater[0][password]" class="form-control" placeholder="Password" aria-label="Password">
             </div>
             <div class="mb-3">
                 <input type="text" name="repeater[0][name]" class="form-control" placeholder="Name" aria-label="Name" data-bind-name value="" required>

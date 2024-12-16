@@ -36,7 +36,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_contributions')->nullable();
             $table->unsignedBigInteger('id_statuses')->nullable();
             $table->text('strength')->nullable();
-            $table->text('Weakness')->nullable();
+            $table->text('weakness')->nullable();
 
             $table->foreign('id_positions')->references('id')->on('positions');
             $table->foreign('id_contributions')->references('id')->on('contributions');

@@ -5,9 +5,9 @@ var req = {
 };
 
 const menuByRole = {
-    "admin": ["dashboard", "user", "coach"],
-    "user" : ["dashboard", "user"],
-    "coach" : ["dashboard", "user", "coach"]
+    "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance"],
+    "user" : ["dashboard", "user", "userAttendance"],
+    "coach" : ["dashboard", "user", "coach", "schedule", "addSchedule", "attendance"]
 }
 
 const sidebarItems = [
@@ -26,6 +26,22 @@ const sidebarItems = [
       icon: "ni ni-support-16",
       label: "Coach Management"
     },
+    {
+      url: "schedule",
+      icon: "ni ni-calendar-grid-58",
+      label: "Schedule Management"
+    },
+    {
+      url: "userAttendance",
+      icon: "ni ni-check-bold",
+      label: "User Attendance"
+    },
+    {
+      url: "attendance",
+      icon: "ni ni-check-bold",
+      label: "Participants Attendance"
+    },
+
 ];
 
 // Get CSRF token from meta tag
@@ -182,7 +198,6 @@ function setMenuByRole(){
         let menuUrl = item.url.replace(/_/g, '-');
         return menu.includes(menuUrl)
     });
-   console.log(menu);
    
     // add list menu
     sidebarMenu.forEach(function(item){
@@ -197,11 +212,11 @@ function setMenuByRole(){
             </li>
                        
         `
-        $(".collapse .navbar-nav").append(menuItem);
+        $(".menu-sidebar .navbar-nav").append(menuItem);
     });
 
     // active menu
-    $(".collapse .navbar-nav .nav-item").each(function(index, menu){
+    $(".menu-sidebar .navbar-nav .nav-item").each(function(index, menu){
         let pathname = window.location.pathname.replace(/[/-]/g, '');
         pathname = pathname.replace(/^kmspublic/, '');
         let urlSidebar = $(this).find("a").attr("href").replace(/[/-]/g, '');
@@ -303,6 +318,18 @@ function pagination(page, table) {
         paginglayout.find(".btn-first").addClass("disabled");
         dataprev = 0;
     }
+}
+
+function formatTime (data) {
+    const isoTimestamp = data;
+    const date = new Date(isoTimestamp);
+
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+
+    const formattedTime = `${hours}:${minutes}`;
+
+    return formattedTime;
 }
 
 function empty(value) {

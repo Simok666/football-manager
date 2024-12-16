@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class CoachResource extends JsonResource
 {
@@ -20,6 +21,7 @@ class CoachResource extends JsonResource
             'email' => $this->email,
             'nik' => $this->nik,
             'phone' => $this->phone,
+            'password' => $this->password,
             'place_of_birth' => $this->place_of_birth,
             'date_of_birth' => $this->date_of_birth,
             'address' => $this->address,

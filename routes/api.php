@@ -32,6 +32,16 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     Route::post('user/login', [UserAuthController::class, 'login']);
     Route::post('admin/login', [UserAuthController::class, 'adminLogin']);
+    Route::post('coach/login', [UserAuthController::class, 'coachLogin']);
     Route::post('user', [UserAuthController::class, 'getUserAcc'])->middleware('auth:sanctum');
+
+    Route::post('addUpdateSchedule', [AdminController::class, 'addSchedule'])->middleware('auth:sanctum');
+    Route::get('getSchedule', [AdminController::class, 'getSchedule'])->middleware('auth:sanctum');
+
+    Route::put('markAttendance/{id}', [AdminController::class, 'markAttendance'])->middleware('auth:sanctum');
+    Route::get('getUserAttendance', [AdminController::class, 'getUserAttendance'])->middleware('auth:sanctum');
+
+    Route::get('getImageDocumentation/{id}', [AdminController::class, 'getImageDocumentation'])->middleware('auth:sanctum');
+    Route::post('removeImageDocumentation', [AdminController::class, 'removeImageDocumentation'])->middleware('auth:sanctum');
 });
 

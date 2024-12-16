@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Schedule;
 
 class User extends Authenticatable
 {
@@ -37,7 +38,7 @@ class User extends Authenticatable
         'id_contributions',
         'id_statuses',
         'strength',
-        'Weakness',
+        'weakness',
         'is_verified'
     ];
 
@@ -74,5 +75,38 @@ class User extends Authenticatable
     public function status()
     {
         return $this->belongsTo(Status::class, 'id_statuses');
+    }
+
+    /**
+     * The schedules that the user is associated with.
+     */
+    public function schedules()
+    {
+        return $this->belongsToMany(Schedule::class, 'schedule_user')
+                    ->withPivot('role')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Check if user is part of a specific schedule.
+     *
+     * @param int $scheduleId
+     * @return bool
+     */
+    public function isInSchedule($scheduleId)
+    {
+        return $this->schedules()->where('schedules.id', $scheduleId)->exists();
+    }
+
+    /**
+     * Get user's role in a specific schedule.
+     *
+     * @param int $scheduleId
+     * @return string|null
+     */
+    public function getScheduleRole($scheduleId)
+    {
+        $schedule = $this->schedules()->where('schedules.id', $scheduleId)->first();
+        return $schedule ? $schedule->pivot->role : null;
     }
 }
