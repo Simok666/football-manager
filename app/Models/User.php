@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Schedule;
+use App\Models\Scoring;
 
 class User extends Authenticatable
 {
@@ -108,5 +109,21 @@ class User extends Authenticatable
     {
         $schedule = $this->schedules()->where('schedules.id', $scheduleId)->first();
         return $schedule ? $schedule->pivot->role : null;
+    }
+
+    /**
+     * The scorings that belong to the user.
+     */
+    public function scorings()
+    {
+        return $this->hasMany(Scoring::class);
+    }
+
+    /**
+     * Get the latest scoring record for the user.
+     */
+    public function latestScoring()
+    {
+        return $this->hasOne(Scoring::class)->latestOfMany();
     }
 }

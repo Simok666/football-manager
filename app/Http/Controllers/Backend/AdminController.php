@@ -9,6 +9,7 @@ use App\Models\Position;
 use App\Models\Coach;
 use App\Models\Contribution;
 use App\Models\Schedule;
+use App\Models\Scoring;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\CoachResource;
 use App\Http\Resources\ScheduleResource;
@@ -355,6 +356,91 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to remove documentation: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * add scoring
+     * 
+     * @param Request $request
+     * @param Scoring $scoring
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function addUpdateScoring (Request $request, Scoring $scoring) {
+        try {
+            DB::beginTransaction(); 
+            // dd($request->repeater);
+            $data = collect($request->repeater)->map(function ($item) use ($scoring) {
+                
+                $scoring = $scoring::updateOrCreate(
+                    [
+                        'id' => $item['id'] ?? null,
+                    ],
+                    [
+                        'user_id'   => $item['user_id'],
+                        'discipline' => $item['discipline'],
+                        'attitude' => $item['attitude'],
+                        'stamina' => $item['stamina'],
+                        'injury' => $item['injury'],
+                        'goals' => $item['goals'],
+                        'assists' => $item['assists'],
+                        'shots_on_target' => $item['shots_on_target'],
+                        'successful_passes' => $item['successful_passes'],
+                        'chances_created' => $item['chances_created'],
+                        'tackles' => $item['tackles'],
+                        'interceptions' => $item['interceptions'],
+                        'clean_sheets' => $item['clean_sheets'],
+                        'saved' => $item['saved'] ?? null,
+                        'offside' => $item['offside'] ?? null,
+                        'foul' => $item['foul'],
+                        'improvement' => $item['improvement'],
+                    ],
+                );
+                 
+            DB::commit();
+            });
+            return response()->json(['message' => 'Data created successfully'], 201);
+          } catch(\Illuminate\Database\QueryException $ex) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred created data: ' . $ex->getMessage()], 400);
+          } catch(\Exception $e) {
+              DB::rollBack();
+              return response()->json(['error' => 'An error occurred while created data: ' . $e->getMessage()], 400);
+          }
+    }
+
+    /**
+     * Get Scoring Data for a User
+     * 
+     * @param int $userId
+     * @param Scoring $scoring
+     * 
+     * @return JsonResponse
+     */
+    public function getScoring($userId, Scoring $scoring)
+    {
+        try {
+            // Get all scoring records for the user
+            $scoringRecords = $scoring::getScoringByUserId($userId);
+            
+            // Get performance metrics
+            $performanceMetrics = $scoring::getUserPerformanceMetrics($userId);
+
+            return response()->json([
+                'status' => 'success',
+                'data' =>  $scoringRecords,
+                // 'data' => [
+                //     'scoring_records' => $scoringRecords,
+                //     'performance_metrics' => $performanceMetrics
+                // ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve scoring data: ' . $e->getMessage()
             ], 500);
         }
     }

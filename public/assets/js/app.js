@@ -38,7 +38,7 @@ const sidebarItems = [
     },
     {
       url: "attendance",
-      icon: "ni ni-check-bold",
+      icon: "ni ni-badge",
       label: "Participants Attendance"
     },
 

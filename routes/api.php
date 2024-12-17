@@ -43,5 +43,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     Route::get('getImageDocumentation/{id}', [AdminController::class, 'getImageDocumentation'])->middleware('auth:sanctum');
     Route::post('removeImageDocumentation', [AdminController::class, 'removeImageDocumentation'])->middleware('auth:sanctum');
-});
 
+    Route::post('addUpdateScoring', [AdminController::class, 'addUpdateScoring'])->middleware('auth:sanctum');
+    Route::get('getScoring/{userId}', [AdminController::class, 'getScoring'])->middleware('auth:sanctum');
+});
