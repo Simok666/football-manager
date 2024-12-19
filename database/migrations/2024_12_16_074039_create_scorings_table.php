@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('scorings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('schedule_id');
             
             // Discipline Enum
             $table->enum('discipline', [
@@ -61,6 +62,7 @@ return new class extends Migration
             $table->timestamps();
             
             // Foreign key constraint
+            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         
         });

@@ -65,6 +65,7 @@
                         <div class="form-group">
                             <label for="activityTitle">Activity Title</label>
                             <input type="hidden" name="repeater[0][event_name]" class="form-control"  value="edit_event">
+                            <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="not_null">
                             <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
                             <input type="text" name="repeater[0][activity]" class="form-control" id="activityTitle" data-bind-activity value="" placeholder="Add title" required>
                         </div>

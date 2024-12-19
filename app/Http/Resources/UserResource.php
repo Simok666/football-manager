@@ -14,6 +14,7 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // dd($this);
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -29,6 +30,8 @@ class UserResource extends JsonResource
             'parents_contact' => $this->parents_contact,
             'weight' => $this->weight,
             'height' => $this->height,
+            'id_positions' => $this->id_positions,
+            'id_contributions' => $this->id_contributions,
             'position' => new PositionResource($this->whenLoaded('position')) ,
             'history' => $this->history,
             'contribution' => new ContributionResource($this->whenLoaded('contribution')),

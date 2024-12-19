@@ -79,13 +79,13 @@
             </div>
             <div class="form-group">
                 <label for="contribution">Iuran</label>
-                <select class="form-control list-contribution" name ="repeater[0][id_contributions]" id="contribution" data-bind-id_contribution value="">
+                <select class="form-control list-contribution" name ="repeater[0][id_contributions]" id="contribution" data-bind-id_contributions value="">
                 <option value="" selected>Pilih Iuran</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
-                <select class="form-control" name ="repeater[0][id_statuses]" id="status" data-bind-id_statuses value="">
+                <select class="form-control" name ="repeater[0][id_statuses]" id="statusUser" data-bind-id_statuses value="">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -177,10 +177,31 @@
                 
             });
         }
+            
 
         $(document).on('click', '.btn-edit', function() {
             $('#editUserManagement').modal('show');
-            
+            const user_id = $(this).data('id');
+
+            $('#statusUser').empty();
+            $('#statusUser').append('<option value="">Pilih Status</option>');
+        
+            if (user_id) {
+                let selectedContribution = '';
+                $(document).on('change', '.list-contribution', function() {
+                    selectedContribution = $(this).val();
+                    const urlStatus = `${baseUrl}/api/v1/getStatus`;
+                    ajaxData(urlStatus, 'GET', { "id": user_id, "selectedContribution": selectedContribution }, function(resp) {
+                        let dataStatus = resp.data;
+                        let statusOptions = '';
+                        statusOptions += `<option value="${dataStatus.id}">${dataStatus.description}</option>`;
+                        // dataStatus.forEach(element => {
+                            
+                        // });
+                        $('#statusUser').html(statusOptions);
+                    });
+                });
+            } 
             ajaxData(`${baseUrl}/api/v1/getUser`, 'GET', {
                 "id" : $(this).data('id')
             }, function(resp) {
@@ -189,11 +210,14 @@
                     toast("Data not found", 'warning');
                     $('#editUserManagement').modal('hide');
                 }
-            
+                
                 let result = resp.data[0];
                 $.each(result, function(index, data) {
+                    
                     if (index == "image") return;
                     $('#editUserManagement').find(`[data-bind-${index}]`).val(data).attr('value', data);
+                
+                
                 });
 
                 // Get user role from session

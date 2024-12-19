@@ -11,8 +11,8 @@ class Scoring extends Model
     use HasFactory;
     
     protected $fillable = [
-        'user_id', 
         'schedule_id',
+        'user_id', 
         'discipline', 
         'attitude', 
         'stamina', 
@@ -49,9 +49,10 @@ class Scoring extends Model
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getScoringByUserId($userId)
+    public static function getScoringByUserId($userId, $scheduleId)
     {
         return self::where('user_id', $userId)
+            ->where('schedule_id', $scheduleId)
             ->with('schedule')
             ->orderBy('created_at', 'desc')
             ->get();

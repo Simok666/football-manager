@@ -126,4 +126,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Scoring::class)->latestOfMany();
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id');
+    }
 }

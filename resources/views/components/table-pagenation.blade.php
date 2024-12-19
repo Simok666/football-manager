@@ -20,7 +20,7 @@
               </div>
             </div>
             @if ($pagination)
-            <nav aria-label="Page navigation example" class="pagination-setting-{{ $table }}">
+            <!-- <nav aria-label="Page navigation example" class="pagination-setting-{{ $table }}">
                 <ul class="pagination justify-content-end" style="margin: 10px 20px 15px;">
                     <li class="page-item disabled">
                     <a class="page-link" href="#" tabindex="-1">
@@ -38,6 +38,6 @@
                     </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> -->
             @endif
 </div>

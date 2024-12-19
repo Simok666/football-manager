@@ -5,9 +5,9 @@ var req = {
 };
 
 const menuByRole = {
-    "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance"],
-    "user" : ["dashboard", "user", "userAttendance"],
-    "coach" : ["dashboard", "user", "coach", "schedule", "addSchedule", "attendance"]
+    "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance", "paymentConfirmation", "evaluation"],
+    "user" : ["dashboard", "user", "userAttendance", "userPayment"],
+    "coach" : ["dashboard", "user", "coach", "schedule", "addSchedule", "attendance", "evaluation"]
 }
 
 const sidebarItems = [
@@ -41,6 +41,22 @@ const sidebarItems = [
       icon: "ni ni-badge",
       label: "Participants Attendance"
     },
+    {
+      url: "userPayment",
+      icon: "ni ni-money-coins",
+      label: "User Payment"
+    },
+    {
+      url: "paymentConfirmation",
+      icon: "ni ni-book-bookmark",
+      label: "User Payment Confirmation"
+    },
+    {
+      url: "evaluation",
+      icon: "ni ni-chart-bar-32",
+      label: "Evaluation"
+    },
+
 
 ];
 
@@ -252,6 +268,8 @@ function GetData(req , table, formatFunc = "" ,successfunc = "") {
         tryCount: 0,
         retryLimit: 3,
         success: function(resp){
+
+            
             resp.lsdt = "";
             if(!empty(resp.meta)) {
                 if(typeof formatFunc !== "function") {

@@ -46,4 +46,13 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     Route::post('addUpdateScoring', [AdminController::class, 'addUpdateScoring'])->middleware('auth:sanctum');
     Route::get('getScoring/{userId}', [AdminController::class, 'getScoring'])->middleware('auth:sanctum');
+
+    Route::get('getPayment', [AdminController::class, 'getPayment'])->middleware('auth:sanctum');
+    Route::post('addUpdatePayment', [AdminController::class, 'addUpdatePayment'])->middleware('auth:sanctum');
+
+    Route::get('getStatus', [AdminController::class, 'getStatus'])->middleware('auth:sanctum');
+    Route::get('getEvaluation', [AdminController::class, 'getEvaluation'])->middleware('auth:sanctum');
+
+    // Detailed Evaluation Route
+    Route::get('get-detailed-evaluation', [AdminController::class, 'getDetailedEvaluation'])->middleware('auth:sanctum');
 });

@@ -1,20 +1,20 @@
 @extends('layout.admin')
-@section('title', 'Attendance Participants')    
-@section('title_page', 'Attendance Participants')
+@section('title', 'Evaluation')    
+@section('title_page', 'Evaluation')
 @section('desc_page', '')
 @section('content')
 <div class="row">
-<div class="col-12">
-    @include('components.table-pagenation', ['table' => 'participantsAttendance' , 'url' => '/api/v1/getSchedule', 'headerTitle' => 'Attendance Participants Table' , 'headers' => [
-            "Name Activity",
+    <div class="col-12">
+    @include('components.table-pagenation', ['table' => 'evaluation' , 'url' => '/api/v1/getEvaluation', 'headerTitle' => 'Evaluation Table' , 'headers' => [
+            "Name",
+            "Position",
             "Date Activity",
-            "Name Participants",
-            "Location",
+            "Activity Name",
+            "Activity Location",
             "Action"
         ] , 'pagination' => true])
+    </div>
 </div>
-</div>
-
 <div class="modal fade" id="scoringModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -166,25 +166,22 @@
 @endsection
 
 @section('scripts')
-        <script>
-            $(document).ready(function() {
-                GetData(req,"participantsAttendance", formatparticipantsattendance);
-            });
-
-            function formatparticipantsattendance(data) {
-                var result = "";
+    <script>
+        $(document).ready(function() {
+            GetData(req,"evaluation", formatevaluation);
+        });
+        
+        function formatevaluation(data) {
+            var result = "";
                 $.each(data, function(index, data) {
-                    const dateObj = new Date(data.date_activity);
+                    data.schedule_activities.forEach(element => {
+                    const dateObj = new Date(element.schedule_date);
                     const formattedDate = dateObj.getFullYear() + 
                                                 '-' + 
                                                 String(dateObj.getMonth() + 1).padStart(2, '0') + 
                                                 '-' + 
                                                 String(dateObj.getDate()).padStart(2, '0');
-                    let participatsAdded = data.participants_added;
-                    
-                    
-                    participatsAdded.forEach(function(participant) {
-                    
+                   
                     result += `
                         <tr>
                             <td>
@@ -193,114 +190,92 @@
                                     <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
                                 </div>
                                 <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">${data.activity}</h6>
+                                    <h6 class="mb-0 text-sm">${data.name}</h6>
                                 </div>
                                 </div>
                             </td>
+                            <td>${data.position}</td>
                             <td>${formattedDate}</td>
-                            <td>${participant.name}</td>
-    
-                            <td>${data.location}</td>
-        
+                            <td>${element.schedule_name}</td>
+                            <td>${element.schedule_location}</td>
+                            
                             <td>
-                                ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-scoring" 
-                                                title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}" data-user-id="${participant.id}" data-position-id="${participant.id_positions}">
+                                ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-detail" 
+                                                title="edit data" data-training="${element.schedule_name}" data-location="${element.schedule_location}" data-schedule-id="${element.schedule_id}" data-user-id="${data.user_id}">
                                                 <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
-                                                <span class="btn-inner--text">Add Scoring</span>
+                                                <span class="btn-inner--text">Detail</span>
                                             </a>`}
                             </td>
                         </tr>
-                    `;
-               
-                });     
-                });
+                    `
+                });    
+                    })
+                    
                 return result;
-            }
+        }
 
-            $(document).on('click', '.btn-scoring', function() {
-                const schedule_id = $(this).data('id');
-                const data_user_id = $(this).data('user-id');
-                const data_position_id = $(this).data('position-id');
-                
-                // Disable offside input for specific positions (e.g., goalkeeper)
-                if (data_position_id == 1) {
-                    $('input[name="repeater[0][offside]"]').prop('disabled', true)
-                        .val(0)
-                        .closest('.mb-3')
-                        .append('<small class="text-muted">Not applicable for this position</small>');
-                } else if (data_position_id == 2 || data_position_id == 3 || data_position_id == 4) {
-                    $('input[name="repeater[0][saved]"]').prop('disabled', true)
-                        .val(0)
-                        .closest('.mb-3')
-                        .append('<small class="text-muted">Not applicable for this position</small>');
-                } 
-                
-                $('#schedule_id').val($(this).data('id'));
-                $('#user_id').val($(this).data('user-id'));
-                
-                ajaxData(`${baseUrl}/api/v1/getScoring/${data_user_id}`, 'GET', {
-                    "schedule_id" : schedule_id
-                }
-                , function(resp) {
-                    if (empty(resp.data)) {
-                        toast("Data not found please add data first", 'warning');
-                        $('#scoringModal').modal('hide');
-                    }
-                
-                    let result = resp.data[0];
-                    $.each(result, function(index, data) {
-                        if (index == "image") return;
-                        // Handle radio button selections
-                        if (index === 'discipline' || index === 'attitude' || index === 'stamina' || index === 'injury') {
-                            // Find and check the radio button with matching value
-                            $(`input[name="repeater[0][${index}]"][value*="${data}"]`).prop('checked', true);
-                        } else {
-                            // For other inputs, set value normally
-                            $('#scoringModal').find(`[data-bind-${index}]`).val(data).attr('value', data);
-                        }
-                    });
+        $(document).on('click', '.btn-detail', function() {
+            const scheduleId = $(this).data('schedule-id');
+            const userId = $(this).data('user-id');
+            const scheduleName = $(this).data('training');
+            const scheduleLocation = $(this).data('location');
 
+            // Fetch detailed evaluation
+            $.ajax({
+                url: `${baseUrl}/api/v1/get-detailed-evaluation`,
+                method: 'GET',
+                data: {
+                    schedule_id: scheduleId,
+                    user_id: userId
                 },
-                function() {
-                    setTimeout(function() {
-                        $('#scoringModal').modal('hide');
-                    }, 1000);
-                });
+                success: function(resp) {
+                    // Disable all form inputs
+                    $('#scoring input, #scoring textarea, #scoring select').prop('disabled', true);
+                    
+                    // Populate modal with detailed information
+                    $('#schedule_id').val(scheduleId);
+                    $('#user_id').val(userId);
 
-                $('#scoringModal').modal('show');
-            });
+                    // Populate form fields with existing scoring data if available
+                    if (resp.scoring) {
+                        // Discipline
+                        $(`input[name="repeater[0][discipline]"][value="${resp.scoring.discipline}"]`).prop('checked', true);
+                        
+                        // Attitude
+                        $(`input[name="repeater[0][attitude]"][value="${resp.scoring.attitude}"]`).prop('checked', true);
+                        
+                        // Stamina
+                        $(`input[name="repeater[0][stamina]"][value="${resp.scoring.stamina}"]`).prop('checked', true);
+                        
+                        // Injury
+                        $(`input[name="repeater[0][injury]"][value="${resp.scoring.injury}"]`).prop('checked', true);
 
-            // Ensure radio buttons have a value when selected
-            $('input[type="radio"]').on('change', function() {
-                // Ensure the selected radio button's value is captured
-                $(this).prop('checked', true);
-            });
-
-            $("#scoringModal").on('hidden.bs.modal', function () {
-                // Uncheck all radio buttons
-                $('input[type="radio"]').prop('checked', false);
-                
-                // Reset other form fields
-                $('#scoring')[0].reset();
-            });
-
-            $("#scoring").submit(function(e) {
-                e.preventDefault();
-                const url = `${baseUrl}/api/v1/addUpdateScoring`;
-                const formData = new FormData(this);
-
-                ajaxDataFile(url, 'POST', formData,
-                    function(resp) {
-                        toast("Save data success", 'success');
-                        $("#scoringModal").modal('hide');
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 3000);
-                    },
-                    function (xhr) {
-                        toast("Save data failed", 'error');
+                        // Numeric fields
+                        $('input[name="repeater[0][goals]"]').val(resp.scoring.goals);
+                        $('input[name="repeater[0][assists]"]').val(resp.scoring.assists);
+                        $('input[name="repeater[0][shots_on_target]"]').val(resp.scoring.shots_on_target);
+                        $('input[name="repeater[0][successful_passes]"]').val(resp.scoring.successful_passes);
+                        $('input[name="repeater[0][chances_created]"]').val(resp.scoring.chances_created);
+                        $('input[name="repeater[0][tackles]"]').val(resp.scoring.tackles);
+                        $('input[name="repeater[0][interceptions]"]').val(resp.scoring.interceptions);
+                        $('input[name="repeater[0][clean_sheets]"]').val(resp.scoring.clean_sheets);
+                        $('input[name="repeater[0][saved]"]').val(resp.scoring.saved);
+                        $('input[name="repeater[0][offside]"]').val(resp.scoring.offsides);
+                        $('input[name="repeater[0][foul]"]').val(resp.scoring.foul);
+                        $('textarea[name="repeater[0][improvement]"]').val(resp.scoring.improvement);
                     }
-                );
-            }); 
-        </script>
+
+                    // Update modal title with schedule details
+                    $('#exampleModalLabel').text(`Scoring for ${scheduleName} at ${scheduleLocation}`);
+
+                    // Hide save button since inputs are disabled
+                    $('.modal-footer button[type="submit"]').hide();
+                },
+                error: function(xhr) {
+                    toast('Failed to load detailed evaluation', 'error');
+                    console.error(xhr);
+                }
+            });
+        });
+    </script>
 @endsection
