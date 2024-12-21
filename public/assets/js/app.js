@@ -6,7 +6,7 @@ var req = {
 
 const menuByRole = {
     "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance", "paymentConfirmation", "evaluation"],
-    "user" : ["dashboard", "user", "userAttendance", "userPayment"],
+    "user" : ["dashboard", "user", "userAttendance", "userPayment", "evaluation"],
     "coach" : ["dashboard", "user", "coach", "schedule", "addSchedule", "attendance", "evaluation"]
 }
 
@@ -142,6 +142,7 @@ function checkLogin() {
             let role = (resp.data.role == "user" ? "user" : resp.data.role); ;
             $(".display-user-role").html(role);
             setSession("role", resp.data.role);
+            setSession("idUser", resp.data.id);
             // if (role == "user") {
             //     let isVerificator = resp.data.dataRole.find((element) => element.nama_role == "Knowledge Verificator");
             //     let isContributor = resp.data.dataRole.find((element) => element.nama_role == "Knowledge Contributor");

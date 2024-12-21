@@ -5,14 +5,25 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-    @include('components.table-pagenation', ['table' => 'evaluation' , 'url' => '/api/v1/getEvaluation', 'headerTitle' => 'Evaluation Table' , 'headers' => [
-            "Name",
-            "Position",
-            "Date Activity",
-            "Activity Name",
-            "Activity Location",
-            "Action"
-        ] , 'pagination' => true])
+        <div class="card">
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between align-items-center" style="margin: 10px;">
+                    <h6>Evaluation Table</h6>
+                    <div class="input-group w-25">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" id="evaluationTableSearch" placeholder="Search in evaluation table...">
+                    </div>
+                </div>
+            </div>
+            @include('components.table-pagenation', ['table' => 'evaluation' , 'url' => '/api/v1/getEvaluation', 'headerTitle' => 'Evaluation Table' , 'headers' => [
+                "Name",
+                "Position",
+                "Date Activity",
+                "Activity Name",
+                "Activity Location",
+                "Action"
+            ] , 'pagination' => true])
+        </div>
     </div>
 </div>
 <div class="modal fade" id="scoringModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -169,47 +180,113 @@
     <script>
         $(document).ready(function() {
             GetData(req,"evaluation", formatevaluation);
+            $('#evaluationTableSearch').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                // Filter table rows
+                $('.datatable-evaluation tr').each(function() {
+                    
+                    const rowText = $(this).text().toLowerCase();
+                    
+                    // Toggle row visibility based on search term
+                    $(this).toggle(rowText.includes(searchTerm));
+                });
+
+                // If no rows match, show "No results" message
+                if ($('.datatable-evaluation tr:visible').length === 0) {
+                    $('.datatable-evaluation').append(`
+                        <tr class="no-results">
+                            <td colspan="6" class="text-center">
+                                No results found for "${searchTerm}"
+                            </td>
+                        </tr>
+                    `);
+                } else {
+                    // Remove any existing "No results" message
+                    $('.datatable-evaluation .no-results').remove();
+                }
+            });
         });
         
         function formatevaluation(data) {
+            var userId = session("idUser");
+            var role = session("role");
             var result = "";
                 $.each(data, function(index, data) {
-                    data.schedule_activities.forEach(element => {
-                    const dateObj = new Date(element.schedule_date);
-                    const formattedDate = dateObj.getFullYear() + 
-                                                '-' + 
-                                                String(dateObj.getMonth() + 1).padStart(2, '0') + 
-                                                '-' + 
-                                                String(dateObj.getDate()).padStart(2, '0');
-                   
-                    result += `
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                </div>
-                                <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">${data.name}</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>${data.position}</td>
-                            <td>${formattedDate}</td>
-                            <td>${element.schedule_name}</td>
-                            <td>${element.schedule_location}</td>
-                            
-                            <td>
-                                ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-detail" 
-                                                title="edit data" data-training="${element.schedule_name}" data-location="${element.schedule_location}" data-schedule-id="${element.schedule_id}" data-user-id="${data.user_id}">
-                                                <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
-                                                <span class="btn-inner--text">Detail</span>
-                                            </a>`}
-                            </td>
-                        </tr>
-                    `
-                });    
-                    })
+                    if(userId == data.user_id && role == "user") {
+                        data.schedule_activities.forEach(element => {
+                        const dateObj = new Date(element.schedule_date);
+                        const formattedDate = dateObj.getFullYear() + 
+                                                    '-' + 
+                                                    String(dateObj.getMonth() + 1).padStart(2, '0') + 
+                                                    '-' + 
+                                                    String(dateObj.getDate()).padStart(2, '0');
+                    
+                        result += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-2 py-1">
+                                    <div>
+                                        <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${data.name}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>${data.position}</td>
+                                <td>${formattedDate}</td>
+                                <td>${element.schedule_name}</td>
+                                <td>${element.schedule_location}</td>
+                                
+                                <td>
+                                    ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-detail" 
+                                                    title="edit data" data-training="${element.schedule_name}" data-location="${element.schedule_location}" data-schedule-id="${element.schedule_id}" data-user-id="${data.user_id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                                    <span class="btn-inner--text">Detail</span>
+                                                </a>`}
+                                </td>
+                            </tr>
+                        `
+                    });        
+                    } else if (role == "admin" || role == "coach") {
+                        data.schedule_activities.forEach(element => {
+                        const dateObj = new Date(element.schedule_date);
+                        const formattedDate = dateObj.getFullYear() + 
+                                                    '-' + 
+                                                    String(dateObj.getMonth() + 1).padStart(2, '0') + 
+                                                    '-' + 
+                                                    String(dateObj.getDate()).padStart(2, '0');
+                    
+                        result += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-2 py-1">
+                                    <div>
+                                        <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${data.name}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>${data.position}</td>
+                                <td>${formattedDate}</td>
+                                <td>${element.schedule_name}</td>
+                                <td>${element.schedule_location}</td>
+                                
+                                <td>
+                                    ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-detail" 
+                                                    title="edit data" data-training="${element.schedule_name}" data-location="${element.schedule_location}" data-schedule-id="${element.schedule_id}" data-user-id="${data.user_id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                                    <span class="btn-inner--text">Detail</span>
+                                                </a>`}
+                                </td>
+                            </tr>
+                        `
+                    });
+                    }
+                       
+                })
                     
                 return result;
         }
