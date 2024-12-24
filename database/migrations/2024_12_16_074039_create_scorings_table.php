@@ -45,17 +45,17 @@ return new class extends Migration
             ]);
             
             // Performance Metrics
-            $table->integer('goals')->default(0);
-            $table->integer('assists')->default(0);
-            $table->integer('shots_on_target')->default(0);
+            $table->text('goals')->default(0);
+            $table->text('assists')->default(0);
+            $table->text('shots_on_target')->default(0);
             $table->text('successful_passes')->nullable();
-            $table->integer('chances_created')->default(0);
+            $table->text('chances_created')->default(0);
             $table->text('tackles')->nullable();
-            $table->integer('interceptions')->default(0);
-            $table->integer('clean_sheets')->default(0);
-            $table->integer('saved')->default(0);
-            $table->integer('offsides')->default(0);
-            $table->integer('foul')->default(0);
+            $table->text('interceptions')->default(0);
+            $table->text('clean_sheets')->default(0);
+            $table->text('saved')->default(0);
+            $table->text('offsides')->default(0);
+            $table->text('foul')->default(0);
             
             $table->text('improvement')->nullable();
             

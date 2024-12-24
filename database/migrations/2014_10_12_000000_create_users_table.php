@@ -20,7 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->integer('nik')->nullable();
+            $table->text('nik')->nullable();
             $table->text('place_of_birth')->nullable();
             $table->date('birth_of_date')->nullable();
             $table->text('address')->nullable();
@@ -29,8 +29,8 @@ return new class extends Migration
             $table->text('father_name')->nullable();
             $table->text('mother_name')->nullable();
             $table->text('parents_contact')->nullable();
-            $table->integer('weight')->nullable();
-            $table->integer('height')->nullable();
+            $table->text('weight')->nullable();
+            $table->text('height')->nullable();
             $table->unsignedBigInteger('id_positions')->nullable();
             $table->text('history')->nullable();
             $table->unsignedBigInteger('id_contributions')->nullable();
