@@ -119,7 +119,8 @@
         });
 
         function formatusers(data) {
-            
+            let idUser = session("idUser");
+            let userRole = session("role");
             var result = "";
             $.each(data, function(index, data) {
                 result += `
@@ -136,11 +137,14 @@
                             </div>
                         </td>
                         <td>${data.email}</td>
-                        <td>
-                           <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
+                        <td>${(data.id == idUser && userRole === "user") ?  `<a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
                                 <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
                                 <span class="btn-inner--text">Edit</span>
-                           </a>
+                           </a>` : userRole === "admin" || userRole === "coach" ? `<a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
+                                <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                <span class="btn-inner--text">Edit</span>
+                           </a>` : `<button type="button" class="btn btn-default" disabled>Anda bukan user ini</button>` }
+                           
                         </td>
                     </tr>
                 `
