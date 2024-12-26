@@ -137,7 +137,7 @@
                         </td>
                         <td>${data.email}</td>
                         <td>
-                           <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
+                           <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
                                 <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
                                 <span class="btn-inner--text">Edit</span>
                            </a>
@@ -179,19 +179,22 @@
         }
             
 
-        $(document).on('click', '.btn-edit', function() {
+        let currentEditingUserId = null;
+
+        $(document).on('click', '.btn-edit-user', function() {
+            currentEditingUserId = $(this).data('user-id');
+
             $('#editUserManagement').modal('show');
-            const user_id = $(this).data('id');
 
             $('#statusUser').empty();
             $('#statusUser').append('<option value="">Pilih Status</option>');
         
-            if (user_id) {
+            if (currentEditingUserId) {
                 let selectedContribution = '';
                 $(document).on('change', '.list-contribution', function() {
                     selectedContribution = $(this).val();
                     const urlStatus = `${baseUrl}/api/v1/getStatus`;
-                    ajaxData(urlStatus, 'GET', { "id": user_id, "selectedContribution": selectedContribution }, function(resp) {
+                    ajaxData(urlStatus, 'GET', { "id": currentEditingUserId, "selectedContribution": selectedContribution }, function(resp) {
                         let dataStatus = resp.data;
                         let statusOptions = '';
                         statusOptions += `<option value="${dataStatus.id}">${dataStatus.description}</option>`;
@@ -203,7 +206,7 @@
                 });
             } 
             ajaxData(`${baseUrl}/api/v1/getUser`, 'GET', {
-                "id" : $(this).data('id')
+                "id" : $(this).data('user-id')
             }, function(resp) {
 
                 if (empty(resp.data)) {
@@ -254,15 +257,62 @@
                 if (userRole === 'user') {
                     userFieldsToDisable.forEach(selector => {
                         $(`#editUserManagement ${selector}`).prop('disabled', true);
+                        // Add a hidden input clone for each disabled field to ensure value submission
+                        $(`#editUserManagement ${selector}`).each(function() {
+                            // Skip if already has a hidden clone
+                            if ($(this).data('hidden-clone')) return;
+                            
+                            // Create a hidden input with the same name and value
+                            const $hiddenInput = $('<input>', {
+                                type: 'hidden',
+                                name: $(this).attr('name'),
+                                value: $(this).val(),
+                                'data-original-id': $(this).attr('id')
+                            });
+                            
+                            // Mark that we've created a clone
+                            $(this).data('hidden-clone', true);
+                            
+                            // Insert hidden input right after the disabled field
+                            $(this).after($hiddenInput);
+                        });
                     });
                     $('#user-role-note').text('Note: As a user, you cannot modify these fields. Please contact an administrator for updates.').show();
                 } else if (userRole === 'coach') {
                     coachFieldsToDisable.forEach(selector => {
                         $(`#editUserManagement ${selector}`).prop('disabled', true);
+                        // Add a hidden input clone for each disabled field to ensure value submission
+                        $(`#editUserManagement ${selector}`).each(function() {
+                            // Skip if already has a hidden clone
+                            if ($(this).data('hidden-clone')) return;
+                            
+                            // Create a hidden input with the same name and value
+                            const $hiddenInput = $('<input>', {
+                                type: 'hidden',
+                                name: $(this).attr('name'),
+                                value: $(this).val(),
+                                'data-original-id': $(this).attr('id')
+                            });
+                            
+                            // Mark that we've created a clone
+                            $(this).data('hidden-clone', true);
+                            
+                            // Insert hidden input right after the disabled field
+                            $(this).after($hiddenInput);
+                        });
                     });
                     $('#user-role-note').text('Note: As a coach, you cannot modify these fields. Please contact an administrator for updates.').show();
                 }
 
+                // Ensure hidden inputs are updated when original fields change
+                $('#editUserManagement').on('change', 'input, select, textarea', function() {
+                    const originalId = $(this).attr('id');
+                    const $hiddenInput = $(`input[data-original-id="${originalId}"]`);
+                    
+                    if ($hiddenInput.length) {
+                        $hiddenInput.val($(this).val());
+                    }
+                });
             },
             function() {
                 setTimeout(function() {
@@ -271,19 +321,35 @@
             });
         });
 
-        $("#form-edit-usermanagement").on('submit', function(e) {
+        $('#editUserManagement').on('submit', '#form-edit-usermanagement', function(e) {
             e.preventDefault();
+            
+            // Explicitly select the form element
+            const form = document.getElementById('form-edit-usermanagement');
+            
+            // Create FormData using the form element
+            const data = new FormData(form);
+            
+            if (currentEditingUserId) {
+                data.delete('repeater[0][id]');
+                data.append('repeater[0][id]', currentEditingUserId);
+            }
+
             const url = `${baseUrl}/api/v1/userManagement`;
-            const data = new FormData(this);
             ajaxDataFile(url, 'POST', data, function(resp) {
                 toast("Data has been saved");
+        
                 $('#editUserManagement').modal('hide');
+
+                currentEditingUserId = null;
+    
                 setTimeout(function() {
                     window.location.reload();
                 }, 1000);
-                // loadingButton($("#form-edit-usermanagement"), false)
             }, function(data) {
-                // loadingButton($("#form-edit-usermanagement"), false)
+                toast("Failed to save data");
+                
+                currentEditingUserId = null;
             });
         });
     </script>
