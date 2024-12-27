@@ -68,7 +68,7 @@
                                                 '-' + 
                                                 String(dateObj.getDate()).padStart(2, '0');
     
-                    const fileUrl = `${baseUrl}/storage/${data.proof_payment}`;
+                    const fileUrl = `${baseUrl}/storage/app/public/${data.proof_payment}`;
                    
                     result += `
                         <tr>

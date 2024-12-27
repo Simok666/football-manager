@@ -164,7 +164,7 @@
                         
                         resp.data.forEach((doc, index) => {
                             // Construct full file URL
-                            const fileUrl = `${baseUrl}/storage/${doc.file_path}`;
+                            const fileUrl = `${baseUrl}/storage/app/public/${doc.file_path}`;
                             
                             cardsHtml += `
                                 <div class="col-md-4 mb-3">
