@@ -15,6 +15,8 @@
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Toastify CSS -->
   <link rel="stylesheet" href="{{ asset('assets/vendors/toastify/toastify.css') }}">
+  <!-- Font Awesom -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
 </head>
@@ -24,7 +26,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
+        <!-- <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
           <div class="container-fluid">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="../pages/dashboard.html">
               Argon Dashboard 3
@@ -65,12 +67,12 @@
               </ul>
               <ul class="navbar-nav d-lg-block d-none">
                 <li class="nav-item">
-                  <!-- <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 btn-primary">Free Download</a> -->
+                  <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 btn-primary">Free Download</a>
                 </li>
               </ul>
             </div>
           </div>
-        </nav>
+        </nav> -->
         <!-- End Navbar -->
       </div>
     </div>
@@ -92,14 +94,28 @@
                       <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email" required>
                     </div>
                     <div class="mb-3">
-                      <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" required>
+                      <div class="input-group">
+                        <input type="password" name="password" id="myPass" class="form-control" placeholder="Password" aria-label="Password"  required>
+                        <span class="input-group-text" id="showPass">
+                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                          <i class="fa fa-eye" aria-hidden="true" style="display:none;"></i>
+                        </span>
+                      </div>
+                      <!-- <div class="input-group">
+                      <input type="number" name="repeater[0][successful_passes]" class="form-control" placeholder="Successful passes" aria-label="Successful passes" data-bind-successful_passes value="" min="0" max="100" style= "padding:20px 20px 20px;"required>
+                      <span class="input-group-text" id="basic-addon2">%</span>
+                  </div> -->
+                      <!-- <span id="showPass">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        <i class="fa fa-eye" aria-hidden="true" style="display:none;"></i>
+                      </span> -->
                     </div>
                     <div class="form-group">
                       <label for="exampleFormControlSelect1">Pilih Role</label>
                       <select class="form-control" id="role" required>
                           <option value="" disabled readonly selected>--- Select Role ---</option>
                           <option value="admin">Admin</option>
-                          <option value="user">User</option>
+                          <option value="user">Player</option>
                           <option value="coach">Coach</option>
                       </select>
                       </select>
@@ -121,8 +137,8 @@
               <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url({{ asset('assets/img/Logo1.jpeg') }});
           background-size: cover;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new currency"</h4>
-                <p class="text-white position-relative">The more effortless the writing looks, the more effort the writer actually put into the process.</p>
+                <h4 class="mt-5 text-white font-weight-bolder position-relative">"For the things we have to learn before we can do them, we learn by doing them"</h4>
+                <p class="text-white position-relative"></p>
               </div>
             </div>
           </div>
@@ -158,6 +174,17 @@
         }
         // jquery on submit
         $(document).ready(function() {
+            $("#showPass").click(function() {
+              if ($("#myPass").attr("type") == "password") {
+                $("#myPass").attr("type", "text");
+              } else {
+                $("#myPass").attr("type", "password");
+              }
+            });
+            $("#showPass").click(function() {
+              $("#showPass i").toggle();
+            });
+            
             $('form').submit(function(e) {
                 e.preventDefault();
                 role = $('select[id=role]').val();

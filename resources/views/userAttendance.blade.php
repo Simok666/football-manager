@@ -12,7 +12,7 @@
             "Time End Activity",
             "Location",
             "Documentation",
-            "Action"
+            "Confirmation"
         ] , 'pagination' => true])
 </div>
 </div>

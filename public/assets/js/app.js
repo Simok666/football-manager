@@ -7,7 +7,7 @@ var req = {
 const menuByRole = {
     "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance", "paymentConfirmation", "evaluation"],
     "user" : ["dashboard", "user", "userAttendance", "userPayment", "evaluation"],
-    "coach" : ["dashboard", "user", "coach", "schedule", "addSchedule", "attendance", "evaluation"]
+    "coach" : ["dashboard", "user", "schedule", "addSchedule", "attendance", "evaluation"]
 }
 
 const sidebarItems = [
@@ -34,7 +34,7 @@ const sidebarItems = [
     {
       url: "userAttendance",
       icon: "ni ni-check-bold",
-      label: "User Attendance"
+      label: "Player Attendance"
     },
     {
       url: "attendance",
@@ -44,12 +44,12 @@ const sidebarItems = [
     {
       url: "userPayment",
       icon: "ni ni-money-coins",
-      label: "User Payment"
+      label: "Player Payment"
     },
     {
       url: "paymentConfirmation",
       icon: "ni ni-book-bookmark",
-      label: "User Payment Confirmation"
+      label: "Player Payment Confirmation"
     },
     {
       url: "evaluation",

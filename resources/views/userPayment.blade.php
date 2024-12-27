@@ -13,19 +13,32 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Tata Cara Pembayaran</p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Iuran Bulanan Pemain:</p>
                     <h5 class="font-weight-bolder">
                     <p class="mb-0">
-                    1. Seperti ini
+                    1. Tagihan iuran terhitung pada tanggal 25 setiap bulannya.
                     </p>
                     <p class="mb-0">
-                    1. Seperti ini
+                    2. Pemain wajib melakukan pembayaran Iuran sebesar Rp. 300.000/bulan.
                     </p>
                     <p class="mb-0">
-                    1. Seperti ini
+                    3. Pembayaran dapat dilakukan pada periode tanggal 25 sampai tanggal 5 bulan berikutnya.
                     </p>
                     <p class="mb-0">
-                    1. Seperti ini
+                    4. Pemain yang belum melakukan pembayaran melebihi tanggal 5 maka akan terhitung non active.
+                    </p>
+                    <p class="mb-0">
+                    4. Bukti bayar harus diupload pada menu dibawah ini.
+                    </p>
+                    <p class="mb-0">
+                    5. Pembayaran dapat dilakukan dengan transfer ke salah satu rekening berikut:
+                    </p>
+                    <br>
+                    <p class="mb-0">
+                    BCA <b>3690418696</b> an. <b>Monika Aditia Putri R</b>.
+                    </p>
+                    <p class="mb-0">
+                    Mandiri <b>1330030368484</b> an. <b>Monika Aditia Putri R</b>.
                     </p>
                     </h5>
                     

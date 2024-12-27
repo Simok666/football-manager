@@ -6,7 +6,7 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-    @include('components.table-pagenation', ['table' => 'userManagement' , 'url' => '/api/v1/getUser', 'headerTitle' => 'User Management Table' , 'headers' => [
+    @include('components.table-pagenation', ['table' => 'userManagement' , 'url' => '/api/v1/getUser', 'headerTitle' => 'Player Management Table' , 'headers' => [
             "Name",
             "Email",
             "Action"
@@ -305,7 +305,7 @@
                             $(this).after($hiddenInput);
                         });
                     });
-                    $('#user-role-note').text('Note: As a coach, you cannot modify these fields. Please contact an administrator for updates.').show();
+                    $('#user-role-note').text('Note: Silakan hubungi admin untuk mengubah data pemain yang tidak bisa diubah oleh Pelatih.').show();
                 }
 
                 // Ensure hidden inputs are updated when original fields change

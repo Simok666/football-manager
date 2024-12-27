@@ -17,6 +17,8 @@
   <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+   <!-- Font Awesom -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Toastify CSS -->
   <link rel="stylesheet" href="{{ asset('assets/vendors/toastify/toastify.css') }}">
   <!-- CSS Files -->
@@ -25,7 +27,7 @@
 
 <body class="">
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3 navbar-transparent mt-4">
+  <!-- <nav class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3 navbar-transparent mt-4">
     <div class="container">
       <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white" href="../pages/dashboard.html">
         Argon Dashboard 3
@@ -66,12 +68,12 @@
         </ul>
         <ul class="navbar-nav d-lg-block d-none">
           <li class="nav-item">
-            <!-- <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 bg-gradient-light">Free Download</a> -->
+            <a href="https://www.creative-tim.com/product/argon-dashboard" class="btn btn-sm mb-0 me-1 bg-gradient-light">Free Download</a>
           </li>
         </ul>
       </div>
     </div>
-  </nav>
+  </nav> -->
   <!-- End Navbar -->
   <main class="main-content  mt-0">
     <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style="background-image: url({{ asset('assets/img/Logo2.jpeg') }}); background-position: top;">
@@ -80,7 +82,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-5 text-center mx-auto">
             <h1 class="text-white mb-2 mt-5">Welcome!</h1>
-            <p class="text-lead text-white">Use these awesome forms to login or create new account in your project for free.</p>
+            <p class="text-lead text-white">Setelah sign up, akun belum bisa digunakan. Registrasi akun memerlukan persetujuan admin.</p>
           </div>
         </div>
       </div>
@@ -101,7 +103,13 @@
                   <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email">
                 </div>
                 <div class="mb-3">
-                  <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password">
+                  <div class="input-group">
+                    <input type="password" name="password" id="myPass" class="form-control" placeholder="Password" aria-label="Password">
+                    <span class="input-group-text" id="showPass">
+                          <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                          <i class="fa fa-eye" aria-hidden="true" style="display:none;"></i>
+                        </span>
+                  </div>
                 </div>
                 <div class="form-check form-check-info text-start">
                   <!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
@@ -121,7 +129,7 @@
     </div>
   </main>
   <!-- -------- START FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
-  <footer class="footer py-5">
+  <!-- <footer class="footer py-5">
     <div class="container">
       <div class="row">
         <div class="col-lg-8 mb-4 mx-auto text-center">
@@ -172,7 +180,7 @@
         </div>
       </div>
     </div>
-  </footer>
+  </footer> -->
   <!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
   <!--   Core JS Files   -->
   <script src="{{ asset('assets/vendors/jquery/jquery.min.js') }}"></script>
@@ -189,8 +197,18 @@
     // }
 
     $(document).ready(function() {
+      $("#showPass").click(function() {
+              if ($("#myPass").attr("type") == "password") {
+                $("#myPass").attr("type", "text");
+              } else {
+                $("#myPass").attr("type", "password");
+              }
+            });
+            $("#showPass").click(function() {
+              $("#showPass i").toggle();
+            });
             $('form').submit(function(e) {
-                
+
                 e.preventDefault();
                 var form = this;
                 var formData = new FormData(form);
