@@ -7,9 +7,9 @@
 <div class="row">
     <div class="col-12">
     <div class="add-button">
-        <button class="btn btn-icon btn-primary btn-add-coach" type="button">
+        <button class="btn btn-icon btn-primary btn-add-coach" id="coachAdd" type="button">
             <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
-            <span class="btn-inner--text">Add Coach</span>
+            <span class="btn-inner--text" >Add Coach</span>
         </button>    
     </div>
     @include('components.table-pagenation', ['table' => 'coachManagement' , 'url' => '/api/v1/getCoach', 'headerTitle' => 'Coach Management Table' , 'headers' => [
@@ -152,7 +152,10 @@
             function formatcoachs(data) {
                 let idUser = session("idUser");
                 let userRole = session("role");
-                console.log(idUser);
+
+                if (userRole == "coach") {
+                    $('#coachAdd').hide();
+                }
                  
                 var result = "";
                 $.each(data, function(index, data) {

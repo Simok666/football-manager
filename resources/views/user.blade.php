@@ -29,43 +29,56 @@
       </div>
       <form id="form-edit-usermanagement">
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Email</label>
                 <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email" data-bind-email value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Nama</label>
                 <input type="text" name="repeater[0][name]" class="form-control" placeholder="Name" aria-label="Name" data-bind-name value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">NIK</label>
                 <input type="number" name="repeater[0][nik]" class="form-control" placeholder="NIK" aria-label="NIK" data-bind-nik value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tempat Lahir</label>
                 <input type="text" name="repeater[0][place_of_birth]" class="form-control" placeholder="Tempat Lahir" aria-label="Tempat Lahir" data-bind-place_of_birth value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tanggal Lahir</label>
                 <input type="date" name="repeater[0][birth_of_date]" class="form-control" placeholder="Tanggal Lahir" aria-label="Tanggal Lahir" data-bind-birth_of_date value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Alamat</label>
                 <input type="text" name="repeater[0][address]" class="form-control" placeholder="Alamat" aria-label="Alamat" data-bind-address value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Sekolah</label>
                 <input type="text" name="repeater[0][school]" class="form-control" placeholder="Sekolah" aria-label="Sekolah" data-bind-school value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Kelas</label>
                 <input type="text" name="repeater[0][class]" class="form-control" placeholder="Kelas" aria-label="Kelas" data-bind-class value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Nama Ayah</label>
                 <input type="text" name="repeater[0][father_name]" class="form-control" placeholder="Nama Ayah/Wali" aria-label="Nama Ayah/Wali" data-bind-father_name value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Nama Ibu</label>
                 <input type="text" name="repeater[0][mother_name]" class="form-control" placeholder="Nama Ibu/Wali" aria-label="Nama Ibu/Wali" data-bind-mother_name value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Kontak Orang Tua</label>
                 <input type="number" name="repeater[0][parents_contact]" class="form-control" placeholder="Kontak Orang Tua/Wali" aria-label="Kontak Orang Tua/Wali" data-bind-parents_contact value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Berat Badan</label>
                 <input type="text" name="repeater[0][weight]" class="form-control" placeholder="Berat Badan" aria-label="Berat Badan" data-bind-weight value="" >
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tinggi Badan</label>
                 <input type="text" name="repeater[0][height]" class="form-control" placeholder="Tinggi Badan" aria-label="Tinggi Badan" data-bind-height value="" >
             </div>
             <div class="form-group">
@@ -75,6 +88,7 @@
                 </select>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Riwayat</label>
                 <input type="text" name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" data-bind-history value="">
             </div>
             <div class="form-group">
@@ -94,9 +108,11 @@
                 </select>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Kekuatan</label>
                 <input type="text" name="repeater[0][strength]" class="form-control" placeholder="Kekuatan" aria-label="Kekuatan" data-bind-strength value="">
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Kelemahan</label>
                 <input type="text" name="repeater[0][weakness]" class="form-control" placeholder="Kelemahan" aria-label="Kelemahan" data-bind-weakness value="">
             </div>
          </form>
