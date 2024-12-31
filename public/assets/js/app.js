@@ -19,7 +19,7 @@ const sidebarItems = [
     {
       url: "user",
       icon: "ni ni-single-02",
-      label: "User Management"
+      label: "Player Management"
     },
     {
       url: "coach",

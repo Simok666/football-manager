@@ -192,6 +192,7 @@
                 ajaxData(`{{ url('api/v1/') }}/${role}/login`, 'POST', $(this).serialize(),
                     function(resp) {
                         setSession('token',resp.data.token)
+                        setSession('roleUser', resp.data.role)
                         setSession('isLogin',true)
                         window.location = "{{ url('dashboard.html') }}";
                         

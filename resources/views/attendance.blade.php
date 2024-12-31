@@ -97,15 +97,19 @@
             <b> DEFENSE </b><br>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Goals</label>
                 <input type="number" name="repeater[0][goals]" class="form-control" placeholder="Goals" aria-label="Goals" data-bind-goals value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Assists</label>
                 <input type="number" name="repeater[0][assists]" class="form-control" placeholder="Assist" aria-label="Assist" data-bind-assists value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Shots On Target</label>
                 <input type="text" name="repeater[0][shots_on_target]" class="form-control" placeholder="Shots On Target" aria-label="shots_on_target" data-bind-shots_on_target value="" required>
             </div>
             <div class="input-group mb-3">
+                <label for="exampleFormControlInput1">Successful passes</label>
                 <div class="input-group">
                     <input type="number" name="repeater[0][successful_passes]" class="form-control" placeholder="Successful passes" aria-label="Successful passes" data-bind-successful_passes value="" min="0" max="100" style= "padding:20px 20px 20px;"required>
                     <span class="input-group-text" id="basic-addon2">%</span>
@@ -116,9 +120,11 @@
             <b> OFFENSE </b><br>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Chances created</label>
                 <input type="number" name="repeater[0][chances_created]" class="form-control" placeholder="Chances Created" aria-label="Chances Created" data-bind-chances_created value="" required>
             </div>
             <div class="input-group mb-3">
+                <label for="exampleFormControlInput1">Tackles</label>
                 <div class="input-group">
                     <input type="number" name="repeater[0][tackles]" class="form-control" placeholder="Tackles" aria-label="Tackles" data-bind-tackles value="" min="0" max="100" style= "padding:20px 20px 20px;" required>
                     <span class="input-group-text" id="basic-addon2">%</span>
@@ -129,22 +135,27 @@
                 
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Interceptions</label>
                 <input type="text" name="repeater[0][interceptions]" class="form-control" placeholder="Interceptions" aria-label="Interceptions" data-bind-interceptions value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Clean sheets</label>
                 <input type="number" name="repeater[0][clean_sheets]" class="form-control" placeholder="Clean sheets" aria-label="Clean sheets" data-bind-clean_sheets value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Saved</label>
                 <input type="number" name="repeater[0][saved]" class="form-control" placeholder="Saved" aria-label="Saved" data-bind-saved value="" required>
             </div>
             <div class="form-group  mb-3">
             <b> RULES </b><br>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Offside</label>
                 <input type="number" name="repeater[0][offside]" class="form-control" placeholder="Offside" aria-label="Offside" data-bind-offsides value="" required>
                 <small class="form-text text-muted offside-note"></small>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Foul</label>
                 <input type="number" name="repeater[0][foul]" class="form-control" placeholder="Foul" aria-label="Foul" data-bind-foul value="" required>
             </div>
             <div class="form-group">

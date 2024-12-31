@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdminController extends Controller
 {
@@ -798,7 +799,7 @@ class AdminController extends Controller
      * @return JsonResponse
      * 
      */
-    public function getPayment(Request $request)
+    public function getPayment(Request $request, User $user)
     {
         return PaymentResource::collection(
             Payment::with(['user', 'status'])
@@ -808,4 +809,295 @@ class AdminController extends Controller
         );
     }
 
+    /**
+     * dashboard count
+     * 
+     * @param User $user
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function dashboard(User $user) {
+        try {
+            $getAllPlayer = $user::count();
+            $getAllMemberTrialPlayer = $user::where('id_statuses', 1)->count();
+            $getAllMemberActivePlayer = $user::where('id_statuses', 2)->count();
+            $getAllMemberNonActivePlayer = $user::where('id_statuses', 3)->count();
+
+
+            return response()->json([
+                    "getDataCard" => [
+                        "getAllPlayer" => $getAllPlayer,
+                        "getAllMemberTrialPlayer" => $getAllMemberTrialPlayer,
+                        "getAllMemberActivePlayer" => $getAllMemberActivePlayer,
+                        "getAllMemberNonActivePlayer" => $getAllMemberNonActivePlayer
+                    ]
+                ]);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while get data: ' . $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Get monthly new user registrations for dashboard
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getMonthlyNewUsers(Request $request)
+    {
+        try {
+            // Get the current year
+            $year = $request->input('year', date('Y'));
+
+            // Prepare an array to store monthly user registrations
+            $monthlyUsers = [];
+
+            // Months array for mapping
+            $months = [
+                1 => 'January', 2 => 'February', 3 => 'March', 
+                4 => 'April', 5 => 'May', 6 => 'June', 
+                7 => 'July', 8 => 'August', 9 => 'September', 
+                10 => 'October', 11 => 'November', 12 => 'December'
+            ];
+
+            // Query to get new users for each month
+            foreach ($months as $monthNumber => $monthName) {
+                $newUsers = User::whereYear('created_at', $year)
+                    ->whereMonth('created_at', $monthNumber)
+                    ->count();
+
+                $monthlyUsers[] = [
+                    'month' => $monthName,
+                    'new_users' => $newUsers
+                ];
+            }
+
+            return response()->json([
+                'year' => $year,
+                'monthly_new_users' => $monthlyUsers
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve monthly new users: ' . $e->getMessage());
+            
+            return response()->json([
+                'error' => 'Failed to retrieve monthly new users',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * dashboard player
+     * 
+     * @param User $user
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function dashboardPlayer (Request $request, User $user, Schedule $schedule) {
+        try {
+            $idUser = $request->user()->id;
+            $getUser = $user::with('scorings')->whereHas('scorings',function ($query) use ($idUser) {
+                $query->where('user_id', $idUser);
+            })->where('id', $idUser)->first();
+            
+            $totalGoalOrSave = 0;
+            
+
+            $getStatus = $user::with('status')->where('id', $idUser)->first();
+            
+            $countSchedule = $schedule::count(); // Get the total count of schedules
+            $countAttendencebyUserid = AttendanceSchedule::where('user_id', $idUser)->count();
+            $countUserAttendance = $user::withCount(['schedules'=> function (Builder $query) use ($idUser) {
+                $query->where('user_id', $idUser);
+            }])->where('id', $idUser)->first();
+
+            $injuryVal = 0;
+            $disciplineVal = 0;
+            $attitudeVal = 0;
+            $staminaVal = 0;
+            $grade = "A";
+
+            $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave, &$injuryVal, &$disciplineVal, &$attitudeVal, &$staminaVal, &$grade) {
+                $injury = $scoring->injury;
+                $discipline = $scoring->discipline;
+                $attitude = $scoring->attitude;
+                $stamina = $scoring->stamina;
+
+                if($injury == "Tidak ada cidera dalam 1 bulan") {
+                    $injuryVal = 1;
+                } else if ($injury == "Cidera max. 2x sebulan") {
+                    $injuryVal = 2;
+                } else {
+                    $injuryVal = 3;
+                }
+
+                if ($discipline == "Selalu hadir dan tidak pernah terlambat") {
+                    $disciplineVal = 1;
+                } else if ($discipline == "Selalu hadir namun terlambat") {
+                    $disciplineVal = 2;
+                } else {
+                    $disciplineVal = 3;
+                }
+
+                if ($attitude == "Dapat menerima arahan pelatih dan bisa bermain dalam tim") {
+                    $attitudeVal = 1;
+                } else if ($attitude == "Salah satu dari kriteria kurang") {
+                    $attitudeVal = 2;
+                } else {
+                    $attitudeVal = 3;
+                }
+
+                if ($stamina == "Durability & Consistency stabil") {
+                    $staminaVal = 1;
+                } else if ($stamina == "Durability or consistency not stabil") {
+                    $staminaVal = 2;
+                } else {
+                    $staminaVal = 3;
+                } 
+                
+                $totalValue = $injuryVal + $disciplineVal + $attitudeVal + $staminaVal;
+                $grandTotal = $totalValue / 4;
+
+                if ($grandTotal >= 0  && $grandTotal <= 1.9) {
+                    $grade = "A";
+                } else if ($grandTotal >= 2  && $grandTotal <= 2.9) {
+                    $grade = "B";
+                } else if ($grandTotal >= 3){
+                    $grade = "C";
+                }
+
+            });
+
+            // Calculate attendance percentage
+            $totalAttendance = $countUserAttendance->schedules_count > 0 
+                ? min(100, ( $countUserAttendance->schedules_count /  $countAttendencebyUserid) * 100) 
+                : 0;
+
+            // Round to two decimal places
+            $totalAttendance = round($totalAttendance, 2);
+
+            if ($getUser->id_positions == 1) { 
+                $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
+                    $totalGoalOrSave += $scoring->saved;
+                });
+            } else {
+                $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
+                    $totalGoalOrSave += $scoring->goals;
+                });
+            }
+
+            return response()->json([
+                "getStatus" => $getStatus,
+                "totalAttendance" => $totalAttendance,
+                "totalGoalOrSave" => $totalGoalOrSave,
+                "grade" => $grade
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while get data: ' . $e->getMessage()], 400);
+           
+        }
+    }
+
+    /**
+     * dashboard coach
+     * 
+     * @param User $user
+     * 
+     * @return JsonResponse
+     * 
+     */
+    public function dashboardCoach (Request $request, User $user) {
+        try {
+            $countGK = $user::where('id_positions', 1)->count();
+            $countDef = $user::where('id_positions', 2)->count();
+            $countMid = $user::where('id_positions', 3)->count();
+            $countFD = $user::where('id_positions', 4)->count();
+
+            $getUser = $user::with('scorings.schedule')->where('is_verified', 1)->get();
+            
+            $coachTable = [];
+            $getUser->map(function ($user) use (&$coachTable) {
+                $user->scorings->each(function ($scoring) use (&$user, &$coachTable){
+                    
+                    $injury = $scoring->injury;
+                    $discipline = $scoring->discipline;
+                    $attitude = $scoring->attitude;
+                    $stamina = $scoring->stamina;
+    
+                    if($injury == "Tidak ada cidera dalam 1 bulan") {
+                        $injuryVal = 1;
+                    } else if ($injury == "Cidera max. 2x sebulan") {
+                        $injuryVal = 2;
+                    } else {
+                        $injuryVal = 3;
+                    }
+    
+                    if ($discipline == "Selalu hadir dan tidak pernah terlambat") {
+                        $disciplineVal = 1;
+                    } else if ($discipline == "Selalu hadir namun terlambat") {
+                        $disciplineVal = 2;
+                    } else {
+                        $disciplineVal = 3;
+                    }
+    
+                    if ($attitude == "Dapat menerima arahan pelatih dan bisa bermain dalam tim") {
+                        $attitudeVal = 1;
+                    } else if ($attitude == "Salah satu dari kriteria kurang") {
+                        $attitudeVal = 2;
+                    } else {
+                        $attitudeVal = 3;
+                    }
+    
+                    if ($stamina == "Durability & Consistency stabil") {
+                        $staminaVal = 1;
+                    } else if ($stamina == "Durability or consistency not stabil") {
+                        $staminaVal = 2;
+                    } else {
+                        $staminaVal = 3;
+                    } 
+                    
+                    $totalValue = $injuryVal + $disciplineVal + $attitudeVal + $staminaVal;
+                    $grandTotal = $totalValue / 4;
+    
+                    if ($grandTotal >= 0  && $grandTotal <= 1.9) {
+                        $grade = "A";
+                    } else if ($grandTotal >= 2  && $grandTotal <= 2.9) {
+                        $grade = "B";
+                    } else if ($grandTotal >= 3){
+                        $grade = "C";
+                    }   
+                    
+                    
+                    $coachTable[] = [
+                        "name" => $user->name,
+                        "training_activity" => $scoring->schedule->activity,
+                        "totalGoalOrSave" => $user->id_positions == 1 ? $scoring->saved : $scoring->goals,
+                        "foul" => $scoring->foul,
+                        "grade" => $grade,
+                        "positions" => $user->id_positions == 1 ? 'GK' : 'Other'
+                    ];    
+                    
+                });
+            });
+
+
+            return response()->json([
+                "getCountPosition" => [
+                    "countGK" => $countGK,
+                    "countDef" => $countDef,
+                    "countMid" => $countMid,
+                    "countFD" => $countFD
+                ],
+                "coachTable" => $coachTable
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while get data: ' . $e->getMessage()], 400);
+           
+        }
+    }
 }

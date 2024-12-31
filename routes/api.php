@@ -55,4 +55,15 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 
     // Detailed Evaluation Route
     Route::get('get-detailed-evaluation', [AdminController::class, 'getDetailedEvaluation'])->middleware('auth:sanctum');
+
+    // Monthly New Users Route
+    Route::get('get-monthly-new-users', [AdminController::class, 'getMonthlyNewUsers'])->middleware('auth:sanctum');
+
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->middleware('auth:sanctum');
+    
+    Route::get('dashboard-player', [AdminController::class, 'dashboardPlayer'])->middleware('auth:sanctum');
+
+    Route::get('dashboard-coach', [AdminController::class, 'dashboardCoach'])->middleware('auth:sanctum');
+
+    
 });
