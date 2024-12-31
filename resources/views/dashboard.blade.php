@@ -343,7 +343,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="calendar-controls d-flex align-items-center">
                             <button class="btn btn-primary mr-3" id="todayBtn">Today</button>
-                            <a href="{{ url('addSchedule.html') }}" class="btn btn-primary mr-3" id="todayBtn">Add Schedule</a>
+                            <!-- <a href="{{ url('addSchedule.html') }}" class="btn btn-primary mr-3" id="todayBtn">Add Schedule</a> -->
                             <div class="navigation-buttons">
                                 <button id="prevMonth" class="btn btn-outline-secondary mx-1">&lt;</button>
                                 <button id="nextMonth" class="btn btn-outline-secondary mx-1">&gt;</button>
@@ -381,9 +381,14 @@
       <div class="row mt-4" >
         <div class="col-lg- mb-lg-0 mb-4">
           <div class="card ">
-            <div class="card-header pb-0 p-3">
+            <div class="card-header pb-0 p-3" id="headerCoachTable">
               <div class="d-flex justify-content-between">
                 <h6 class="mb-2">List Nama Player</h6>
+              </div>
+            </div>
+            <div class="card-header pb-0 p-3" id="headerAdminTable">
+              <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Status Iuran Pembayaran</h6>
               </div>
             </div>
             <div class="table-responsive" id="coachTable">
@@ -471,10 +476,10 @@
               let roleUser = session("roleUser")
               let allCard = $('#all-card').empty();
               let adminChart = $('#adminChart').hide();
+              let headerCoachTable = $('#headerCoachTable').hide();
+              let headerAdminTable = $('#headerAdminTable').hide();
               let userCalendar = $('#userCalendar').hide();
               let coachTable = $('#coachTable').empty();
-              // console.log(role);
-              // console.log(session("roleUser"));
               
               let url = `${baseUrl}/api/v1/dashboard`;
               let urlUser = `${baseUrl}/api/v1/dashboard-player`;
@@ -483,6 +488,7 @@
       
               if (roleUser == "admin") {
                 $('#adminChart').show()
+                $('#headerAdminTable').show()
                 ajaxData(url, 'GET', [], function(resp) {
                   let cardItem = `
                     <div class="row">
@@ -589,6 +595,44 @@
                   </div>
                   `;
                   allCard.append(cardItem);
+
+                  
+                  let userTablePayment = resp.userTablePayment;
+                  
+                  let adminTableItem = ``;
+                  userTablePayment.forEach((data) => {
+
+                    adminTableItem += `
+                     <table class="table align-items-center ">
+                       <tbody>
+                         <tr>
+                           <td class="w-30">
+                             <div class="d-flex px-2 py-1 align-items-center">
+                               <div>
+                                 <img src="../assets/img/icons/flags/ID.png" style="width: 40px; height: 40px;" alt="Country flag">
+                               </div>
+                               <div class="ms-4">
+                                 <p class="text-xs font-weight-bold mb-0">Nama</p>
+                                 <h6 class="text-sm mb-0">${data.name}</h6>
+                               </div>
+                             </div>
+                           </td>
+                           <td>
+                             <div class="text-center">
+                               <p class="text-xs font-weight-bold mb-0">Status Iuran:</p>
+                               <h6 class="text-sm mb-0">${data.contribution.description}</h6>
+                             </div>
+                           </td>
+                         </tr>
+                       
+                         
+                       </tbody>
+                     </table>
+                          
+                    `;
+                  })
+
+                  coachTable.append(adminTableItem);
                 })
 
                   $.ajax({
@@ -1148,7 +1192,7 @@
 
 
               } else if (roleUser == "coach") {
-                
+                $('#headerCoachTable').show();
                 ajaxData(urlCoach, 'GET', [], function(resp) {
                   let getCountPosition = resp.getCountPosition;
                   let cardItem = `

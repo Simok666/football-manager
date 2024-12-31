@@ -7,7 +7,7 @@ var req = {
 const menuByRole = {
     "admin": ["dashboard", "user", "coach", "schedule", "addSchedule", "userAttendance", "attendance", "paymentConfirmation", "evaluation"],
     "user" : ["dashboard", "user", "userAttendance", "userPayment", "evaluation"],
-    "coach" : ["dashboard", "user", "schedule", "addSchedule", "attendance", "evaluation"]
+    "coach" : ["dashboard", "user", "coach",  "schedule", "addSchedule", "attendance", "evaluation"]
 }
 
 const sidebarItems = [

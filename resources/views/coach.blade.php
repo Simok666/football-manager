@@ -149,7 +149,11 @@
                 GetData(req,"coachManagement", formatcoachs);
             });
 
-            function formatcoachs(data) { 
+            function formatcoachs(data) {
+                let idUser = session("idUser");
+                let userRole = session("role");
+                console.log(idUser);
+                 
                 var result = "";
                 $.each(data, function(index, data) {
                     result += `
@@ -167,10 +171,17 @@
                             </td>
                             <td>${data.email}</td>
                             <td>
-                            <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
+                            ${(data.id == idUser && userRole === "coach") ? `
+                                <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
                                     <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
                                     <span class="btn-inner--text">Edit</span>
                             </a>
+                            ` : userRole === "admin" ?  `
+                            <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
+                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                    <span class="btn-inner--text">Edit</span>
+                            </a>` : `<button type="button" class="btn btn-default" disabled>Anda bukan coach ini</button>` }
+                            
                             </td>
                         </tr>
                     `

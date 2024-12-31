@@ -824,6 +824,7 @@ class AdminController extends Controller
             $getAllMemberActivePlayer = $user::where('id_statuses', 2)->count();
             $getAllMemberNonActivePlayer = $user::where('id_statuses', 3)->count();
 
+            $userTablePayment = $user::with('contribution')->where('is_verified', 1)->get();
 
             return response()->json([
                     "getDataCard" => [
@@ -831,8 +832,10 @@ class AdminController extends Controller
                         "getAllMemberTrialPlayer" => $getAllMemberTrialPlayer,
                         "getAllMemberActivePlayer" => $getAllMemberActivePlayer,
                         "getAllMemberNonActivePlayer" => $getAllMemberNonActivePlayer
-                    ]
-                ]);
+                    ],
+                    "userTablePayment" => $userTablePayment
+            ]);
+
         } catch(\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'An error occurred while get data: ' . $e->getMessage()], 400);
