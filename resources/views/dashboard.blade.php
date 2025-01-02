@@ -1343,7 +1343,7 @@
                      <tbody>
                        <tr>
                          <td class="w-30">
-                           <div class="d-flex px-1 py-1 align-items-center">
+                           <div class="d-flex px-3 py-1 align-items-center">
                              
                              <div class="ms-4">
                                <p class="text-xs font-weight-bold mb-0">Nama</p>
@@ -1351,13 +1351,13 @@
                              </div>
                            </div>
                          </td>
-                         <td>
+                         <td class="w-30">
                            <div class="text-center">
                              <p class="text-xs font-weight-bold mb-0">Training Activity:</p>
                              <h6 class="text-sm mb-0">${data.training_activity}</h6>
                            </div>
                          </td>
-                         <td>
+                         <td >
                            <div class="text-center">
                              <p class="text-xs font-weight-bold mb-0">General:</p>
                              <h6 class="text-sm mb-0">${data.grade}</h6>

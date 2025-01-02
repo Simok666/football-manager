@@ -348,7 +348,7 @@ class AdminController extends Controller
           DB::beginTransaction();   
           $data = collect($request->repeater)->map(function ($item) use ($user) {
               $userEmail = $user::where('id', $item['id'])->first()->email; 
-            
+           
               $user = $user::updateOrCreate(
                   [
                       'id' => $item['id'] ?? null,
@@ -357,6 +357,7 @@ class AdminController extends Controller
                       'email' => $item['email'],
                       'name' => $item['name'],
                       'nik' => $item['nik'],
+                      'password' => Hash::make($item['password']) ?? null,
                       'place_of_birth' => $item['place_of_birth'],
                       'birth_of_date' => $item['birth_of_date'],
                       'address' => $item['address'],
@@ -376,6 +377,13 @@ class AdminController extends Controller
                       'is_verified' => true
                   ],
               );
+
+              if (!empty($item['password']) || $item['password'] != null) {
+                Mail::to($item['email'])->send(new CustomEmail(
+                   "Account Edited",
+                   "Email : " . $item['email'] . " <br/> Password : " .$item['password']
+               ));
+            }
        
         //   $token = Password::createToken($user);
         //   Mail::to($userEmail)->send(new CustomEmail(

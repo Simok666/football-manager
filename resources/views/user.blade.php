@@ -34,6 +34,10 @@
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email" data-bind-email value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput2">Password</label>
+                <input type="password" name="repeater[0][password]" class="form-control" placeholder="Password" aria-label="Password">
+            </div>
+            <div class="mb-3">
                 <label for="exampleFormControlInput1">Nama</label>
                 <input type="text" name="repeater[0][name]" class="form-control" placeholder="Name" aria-label="Name" data-bind-name value="" required>
             </div>
@@ -298,6 +302,7 @@
 
                 const coachFieldsToDisable = [
                     '[name="repeater[0][email]"]',
+                    '[name="repeater[0][password]"]',
                     '[name="repeater[0][name]"]',
                     '[name="repeater[0][nik]"]',
                     '[name="repeater[0][place_of_birth]"]',
