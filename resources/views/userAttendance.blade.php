@@ -6,6 +6,7 @@
 <div class="row">
 <div class="col-12">
     @include('components.table-pagenation', ['table' => 'userAttendance' , 'url' => '/api/v1/getSchedule', 'headerTitle' => 'User Attendance Table' , 'headers' => [
+            "Player Name",
             "Name Activity",
             "Date Activity",
             "Time Start Activity",
@@ -85,50 +86,107 @@
             function formatattendance(data) { 
                 var result = "";
                 $.each(data, function(index, data) {
+                    
+                    const role = session("role");
                     const dateObj = new Date(data.date_activity);
                     const formattedDate = dateObj.getFullYear() + 
                                                 '-' + 
                                                 String(dateObj.getMonth() + 1).padStart(2, '0') + 
                                                 '-' + 
                                                 String(dateObj.getDate()).padStart(2, '0');
-                   
-                    result += `
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                </div>
-                                <div class="d-flex flex-column justify-content-center">
-                                    <h6 class="mb-0 text-sm">${data.activity}</h6>
-                                </div>
-                                </div>
-                            </td>
-                            <td>${formattedDate}</td>
-                            <td>${formatTime(data.time_start_activity)}</td>
-                            <td>${formatTime(data.time_end_activity)}</td>
-                            <td>${data.location}</td>
-                            <td>${`<a href="#" data-toggle="modal" data-target="#downloadModal" class="btn btn-info btn-icon btn-sm btn-download" 
-                                                title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
-                                                <span class="btn-inner--icon"><i class="ni ni-album-2"></i></span>
-                                                <span class="btn-inner--text">download</span>
-                                            </a>`}</td>
-                            <td>
-                                ${(data.user_attendance === true && data.attendance_status === 'Hadir') 
-                                    ? '<span class="badge badge-primary">Hadir</span>' 
-                                    : (data.user_attendance === false && data.attendance_status === 'Tidak Hadir') 
-                                        ? '<span class="badge badge-danger">Tidak Hadir</span>' 
-                                        : (data.user_attendance === false && data.attendance_status === null) 
-                                            ? `<a href="#" data-toggle="modal" data-target="#markModal" class="btn btn-success btn-icon btn-sm btn-mark" 
-                                                title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
-                                                <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
-                                                <span class="btn-inner--text">Mark</span>
-                                            </a>` 
-                                            : '-'
-                                }
-                            </td>
-                        </tr>
-                    `
+                                                
+                    if (role == "admin" || role == "coach") {
+                        $.each(data.user_participiants, function (childIndex, childData) {
+                        result += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                    
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${childData.user.name}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                    
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${data.activity}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>${formattedDate}</td>
+                                <td>${formatTime(data.time_start_activity)}</td>
+                                <td>${formatTime(data.time_end_activity)}</td>
+                                <td>${data.location}</td>
+                                <td>${`<a href="#" data-toggle="modal" data-target="#downloadModal" class="btn btn-info btn-icon btn-sm btn-download" 
+                                                    title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-album-2"></i></span>
+                                                    <span class="btn-inner--text">${role == "admin" ? "edit" : "download"}</span>
+                                                </a>`}</td>
+                                <td>
+                                    ${(data.user_attendance === true && data.attendance_status === 'Hadir') 
+                                        ? '<span class="badge badge-primary">Hadir</span>' 
+                                        : (data.user_attendance === false && data.attendance_status === 'Tidak Hadir') 
+                                            ? '<span class="badge badge-danger">Tidak Hadir</span>' 
+                                            : (data.user_attendance === false && data.attendance_status === null) 
+                                                ? `<a href="#" data-toggle="modal" data-target="#markModal" class="btn btn-success btn-icon btn-sm btn-mark" 
+                                                    title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                                    <span class="btn-inner--text">Mark</span>
+                                                </a>` 
+                                                : role == "admin" ? `<span class="badge badge-primary">${childData.attendance_status}</span>` : '-'
+                                    }
+                                </td>
+                            </tr>
+                        `;
+                        });
+                    }else {
+                        result += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                    
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${data.player_name}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                    
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">${data.activity}</h6>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td>${formattedDate}</td>
+                                <td>${formatTime(data.time_start_activity)}</td>
+                                <td>${formatTime(data.time_end_activity)}</td>
+                                <td>${data.location}</td>
+                                <td>${`<a href="#" data-toggle="modal" data-target="#downloadModal" class="btn btn-info btn-icon btn-sm btn-download" 
+                                                    title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-album-2"></i></span>
+                                                    <span class="btn-inner--text">${role == "admin" ? "edit" : "download"}</span>
+                                                </a>`}</td>
+                                <td>
+                                    ${(data.user_attendance === true && data.attendance_status === 'Hadir') 
+                                        ? '<span class="badge badge-primary">Hadir</span>' 
+                                        : (data.user_attendance === false && data.attendance_status === 'Tidak Hadir') 
+                                            ? '<span class="badge badge-danger">Tidak Hadir</span>' 
+                                            : (data.user_attendance === false && data.attendance_status === null) 
+                                                ? `<a href="#" data-toggle="modal" data-target="#markModal" class="btn btn-success btn-icon btn-sm btn-mark" 
+                                                    title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}">
+                                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                                    <span class="btn-inner--text">Mark</span>
+                                                </a>` 
+                                                : '-'
+                                    }
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    
                 });
                 return result;
             }

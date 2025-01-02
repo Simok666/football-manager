@@ -8,12 +8,39 @@
         <div class="card">
             <div class="card-header pb-0">
                 <div class="d-flex justify-content-between align-items-center" style="margin: 10px;">
-                    <h6>Evaluation Table</h6>
+                    <h6>Search Evaluation</h6>
                     <div class="input-group w-25">
                         <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
                         <input type="text" class="form-control" id="evaluationTableSearch" placeholder="Search in evaluation table...">
                     </div>
                 </div>
+            </div>
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between align-items-center" style="margin: 10px;">
+                    <h6>Filter by Position</h6>
+                    <div class="d-flex align-items-center">
+                    <label for="positionFilter" class="mr-2 mb-0">Filter Posisi:</label>
+                    <select id="positionFilter" class="form-control form-control-sm" style="width: 200px;">
+                        <option value="">Semua Posisi</option>
+                        <option value="G : GOAL KEEPER (PENJAGA GAWANG)">G - Penjaga Gawang (Goalkeeper)</option>
+                        <option value="D: DEFENDER (PEMAIN BELAKANG)">D - Pemain Belakang (Defender)</option>
+                        <option value="M: MIDFIELDER (GELANDANG)">M - Gelandang (Midfielder)</option>
+                        <option value="F: FORWARD (PEMAIN DEPAN)">F - Pemain Depan (Forward)</option>
+                    </select>
+                </div>
+            </div>
+            </div>
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between align-items-center" style="margin: 10px;">
+                    <h6>Filter by Activity</h6>
+                    <div class="d-flex align-items-center">
+                    <label for="activityFilter" class="mr-2 mb-0">Filter Activity:</label>
+                    <select id="activityFilter" class="form-control form-control-sm list-activity" style="width: 200px;">
+                        <option value="">Semua Posisi</option>
+                       
+                    </select>
+                </div>
+            </div>
             </div>
             @include('components.table-pagenation', ['table' => 'evaluation' , 'url' => '/api/v1/getEvaluation', 'headerTitle' => 'Evaluation Table' , 'headers' => [
                 "Name",
@@ -190,7 +217,54 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+            getListActivtiy();
             GetData(req,"evaluation", formatevaluation);
+            $('#positionFilter').on('change', function() {
+                var selectedPosition = $(this).val().toUpperCase();
+               
+                
+                // Hide all rows first
+                $('.datatable-evaluation tbody tr').hide();
+                
+                // Show rows that match the selected position or show all if no position selected
+                if (selectedPosition) {
+                    $('.datatable-evaluation tbody tr').each(function() {
+                        var rowPosition = $(this).find('td:nth-child(2)').text().trim().toUpperCase();
+                        
+                        if (rowPosition === selectedPosition) {
+                            
+                            $(this).show();
+                        }
+                    });
+                } else {
+                    $('.datatable-evaluation tbody tr').show();
+                }
+            });
+
+            $('#activityFilter').on('change', function() {
+                var selectedActivity = $(this).val().toUpperCase();
+               
+                
+                // Hide all rows first
+                $('.datatable-evaluation tbody tr').hide();
+                
+                // Show rows that match the selected position or show all if no position selected
+                if (selectedActivity) {
+                    $('.datatable-evaluation tbody tr').each(function() {
+                        var rowPosition = $(this).find('td:nth-child(4)').text().trim().toUpperCase();
+                        console.log(selectedActivity);
+                        
+                        if (rowPosition === selectedActivity) {
+                            
+                            $(this).show();
+                        }
+                    });
+                } else {
+                    $('.datatable-evaluation tbody tr').show();
+                }
+            });
+
+
             $('#evaluationTableSearch').on('keyup', function() {
                 const searchTerm = $(this).val().toLowerCase();
                 // Filter table rows
@@ -217,6 +291,21 @@
                 }
             });
         });
+
+        let getListActivtiy = () => {
+            const url = `${baseUrl}/api/v1/getSchedule`;
+            ajaxData(url, 'GET', [], function(resp) {
+                let data = resp.data;
+                let option = ``;
+                
+                data.forEach(element => {
+                    option += `<option value="${element.activity}">${element.activity}</option>`;
+                });
+                $(".list-activity").append(option);
+            }, function(data) {
+                
+            });
+        }
         
         function formatevaluation(data) {
             var userId = session("idUser");
@@ -235,10 +324,8 @@
                         result += `
                             <tr>
                                 <td>
-                                    <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                    </div>
+                                    <div class="d-flex px-3 py-1">
+                                    
                                     <div class="d-flex flex-column justify-content-center">
                                         <h6 class="mb-0 text-sm">${data.name}</h6>
                                     </div>
@@ -271,10 +358,8 @@
                         result += `
                             <tr>
                                 <td>
-                                    <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                    </div>
+                                    <div class="d-flex px-3 py-1">
+                                    
                                     <div class="d-flex flex-column justify-content-center">
                                         <h6 class="mb-0 text-sm">${data.name}</h6>
                                     </div>

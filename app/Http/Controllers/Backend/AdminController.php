@@ -921,59 +921,62 @@ class AdminController extends Controller
             $disciplineVal = 0;
             $attitudeVal = 0;
             $staminaVal = 0;
-            $grade = "A";
-
-            $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave, &$injuryVal, &$disciplineVal, &$attitudeVal, &$staminaVal, &$grade) {
-                $injury = $scoring->injury;
-                $discipline = $scoring->discipline;
-                $attitude = $scoring->attitude;
-                $stamina = $scoring->stamina;
-
-                if($injury == "Tidak ada cidera dalam 1 bulan") {
-                    $injuryVal = 1;
-                } else if ($injury == "Cidera max. 2x sebulan") {
-                    $injuryVal = 2;
-                } else {
-                    $injuryVal = 3;
-                }
-
-                if ($discipline == "Selalu hadir dan tidak pernah terlambat") {
-                    $disciplineVal = 1;
-                } else if ($discipline == "Selalu hadir namun terlambat") {
-                    $disciplineVal = 2;
-                } else {
-                    $disciplineVal = 3;
-                }
-
-                if ($attitude == "Dapat menerima arahan pelatih dan bisa bermain dalam tim") {
-                    $attitudeVal = 1;
-                } else if ($attitude == "Salah satu dari kriteria kurang") {
-                    $attitudeVal = 2;
-                } else {
-                    $attitudeVal = 3;
-                }
-
-                if ($stamina == "Durability & Consistency stabil") {
-                    $staminaVal = 1;
-                } else if ($stamina == "Durability or consistency not stabil") {
-                    $staminaVal = 2;
-                } else {
-                    $staminaVal = 3;
-                } 
-                
-                $totalValue = $injuryVal + $disciplineVal + $attitudeVal + $staminaVal;
-                $grandTotal = $totalValue / 4;
-
-                if ($grandTotal >= 0  && $grandTotal <= 1.9) {
-                    $grade = "A";
-                } else if ($grandTotal >= 2  && $grandTotal <= 2.9) {
-                    $grade = "B";
-                } else if ($grandTotal >= 3){
-                    $grade = "C";
-                }
-
-            });
-
+            $grade = "Belum Ada";
+            $grandTotal = 0;
+            
+            if($getUser != null) {
+                $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave, &$injuryVal, &$disciplineVal, &$attitudeVal, &$staminaVal, &$grade, &$grandTotal) {
+                    $injury = $scoring->injury;
+                    $discipline = $scoring->discipline;
+                    $attitude = $scoring->attitude;
+                    $stamina = $scoring->stamina;
+    
+                    if($injury == "Tidak ada cidera dalam 1 bulan") {
+                        $injuryVal = 1;
+                    } else if ($injury == "Cidera max. 2x sebulan") {
+                        $injuryVal = 2;
+                    } else {
+                        $injuryVal = 3;
+                    }
+    
+                    if ($discipline == "Selalu hadir dan tidak pernah terlambat") {
+                        $disciplineVal = 1;
+                    } else if ($discipline == "Selalu hadir namun terlambat") {
+                        $disciplineVal = 2;
+                    } else {
+                        $disciplineVal = 3;
+                    }
+    
+                    if ($attitude == "Dapat menerima arahan pelatih dan bisa bermain dalam tim") {
+                        $attitudeVal = 1;
+                    } else if ($attitude == "Salah satu dari kriteria kurang") {
+                        $attitudeVal = 2;
+                    } else {
+                        $attitudeVal = 3;
+                    }
+    
+                    if ($stamina == "Durability & Consistency stabil") {
+                        $staminaVal = 1;
+                    } else if ($stamina == "Durability or consistency not stabil") {
+                        $staminaVal = 2;
+                    } else {
+                        $staminaVal = 3;
+                    } 
+                    
+                    $totalValue = $injuryVal + $disciplineVal + $attitudeVal + $staminaVal;
+                    $grandTotal += $totalValue / 4;
+    
+                    if ($grandTotal >= 0  && $grandTotal <= 1.9) {
+                        $grade = "A";
+                    } else if ($grandTotal >= 2  && $grandTotal <= 2.9) {
+                        $grade = "B";
+                    } else if ($grandTotal >= 3){
+                        $grade = "C";
+                    }
+    
+                });
+            }
+            // dd($grandTotal);
             // Calculate attendance percentage
             $totalAttendance = $countUserAttendance->schedules_count > 0 
                 ? min(100, ( $countUserAttendance->schedules_count /  $countAttendencebyUserid) * 100) 
@@ -981,15 +984,17 @@ class AdminController extends Controller
 
             // Round to two decimal places
             $totalAttendance = round($totalAttendance, 2);
-
-            if ($getUser->id_positions == 1) { 
-                $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
-                    $totalGoalOrSave += $scoring->saved;
-                });
-            } else {
-                $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
-                    $totalGoalOrSave += $scoring->goals;
-                });
+            
+            if($getUser != null) {
+                if ($getUser->id_positions == 1) { 
+                    $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
+                        $totalGoalOrSave += $scoring->saved;
+                    });
+                } else {
+                    $getUser->scorings->each(function ($scoring) use (&$totalGoalOrSave) {
+                        $totalGoalOrSave += $scoring->goals;
+                    });
+                }
             }
 
             return response()->json([

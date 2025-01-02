@@ -20,13 +20,13 @@
                             </div>
                             <h4 id="currentMonthYear" class="ml-3 mb-0"></h4>
                         </div>
-                        <div class="view-options">
+                        <!-- <div class="view-options">
                             <div class="btn-group" role="group">
                                 <button id="monthView" class="btn btn-outline-primary active">Month</button>
                                 <button id="weekView" class="btn btn-outline-primary">Week</button>
                                 <button id="dayView" class="btn btn-outline-primary">Day</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -433,7 +433,7 @@ $(document).ready(function() {
                                 $('<i>')
                                     .addClass('fas fa-user-plus')
                             )
-                            .append('Add Participants')
+                            .append('Presence')
                     )
                     .append(
                         $('<button>')

@@ -199,10 +199,8 @@
                     result += `
                         <tr>
                             <td>
-                                <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                </div>
+                                <div class="d-flex px-3 py-1">
+                                
                                 <div class="d-flex flex-column justify-content-center">
                                     <h6 class="mb-0 text-sm">${data.activity}</h6>
                                 </div>
@@ -217,7 +215,7 @@
                                 ${`<a href="#" data-toggle="modal" data-target="#scoringModal" class="btn btn-success btn-icon btn-sm btn-scoring" 
                                                 title="edit data" data-training="${data.activity}" data-location="${data.location}" data-id="${data.id}" data-user-id="${participant.id}" data-position-id="${participant.id_positions}">
                                                 <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
-                                                <span class="btn-inner--text">Add Scoring</span>
+                                                <span class="btn-inner--text">Add / Edit Scoring</span>
                                             </a>`}
                             </td>
                         </tr>

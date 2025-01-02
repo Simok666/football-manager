@@ -23,7 +23,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
-
+  <!-- static icon -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=groups" />
   @yield('styles')
 </head>
 
@@ -124,12 +125,12 @@
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
         
-          <div class="ms-md-auto d-flex"><h3 class="font-weight-bolder text-white mb-0">Hello, </h3> <h3 class="font-weight-bolder text-white mb-0 display-user-name"> Rachmad Fidhani</h3></div>
+          <div class="ms-md-auto d-flex"><h3 class="font-weight-bolder text-white mb-0" style="margin: 0 10px;"> Hello, </h3> <h3 class="font-weight-bolder text-white mb-0 display-user-name"> </h3></div>
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group">
+            <!-- <div class="input-group">
               <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
               <input type="text" class="form-control" placeholder="Type here...">
-            </div>
+            </div> -->
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">

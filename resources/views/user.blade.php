@@ -89,7 +89,7 @@
             </div>
             <div class="mb-3">
             <label for="exampleFormControlInput1">Riwayat</label>
-                <input type="text" name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" data-bind-history value="">
+                <textarea name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" data-bind-history value=""></textarea>
             </div>
             <div class="form-group">
                 <label for="contribution">Iuran</label>
@@ -109,11 +109,11 @@
             </div>
             <div class="mb-3">
             <label for="exampleFormControlInput1">Kekuatan</label>
-                <input type="text" name="repeater[0][strength]" class="form-control" placeholder="Kekuatan" aria-label="Kekuatan" data-bind-strength value="">
+                <textarea name="repeater[0][strength]" class="form-control" placeholder="Kekuatan" aria-label="Kekuatan" data-bind-strength value=""> </textarea>
             </div>
             <div class="mb-3">
             <label for="exampleFormControlInput1">Kelemahan</label>
-                <input type="text" name="repeater[0][weakness]" class="form-control" placeholder="Kelemahan" aria-label="Kelemahan" data-bind-weakness value="">
+                <textarea name="repeater[0][weakness]" class="form-control" placeholder="Kelemahan" aria-label="Kelemahan" data-bind-weakness value=""> </textarea>
             </div>
          </form>
       </div>
@@ -139,13 +139,12 @@
             let userRole = session("role");
             var result = "";
             $.each(data, function(index, data) {
-                result += `
+                if (data.id == idUser && userRole === "user") {
+                    result += `
                     <tr>
                         <td>
-                            <div class="d-flex px-2 py-1">
-                            <div>
-                                <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                            </div>
+                            <div class="d-flex px-3 py-1">
+            
                             <div class="d-flex flex-column justify-content-center">
                                 <h6 class="mb-0 text-sm">${data.name}</h6>
                                 <p class="text-xs text-secondary mb-0">${data.nik ?? "Nik Belum Diisi"}</p>
@@ -163,7 +162,33 @@
                            
                         </td>
                     </tr>
-                `
+                `;    
+                } else if (userRole === "admin" || userRole === "coach") {
+                    result += `
+                    <tr>
+                        <td>
+                            <div class="d-flex px-3 py-1">
+                            
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm">${data.name}</h6>
+                                <p class="text-xs text-secondary mb-0">${data.nik ?? "Nik Belum Diisi"}</p>
+                            </div>
+                            </div>
+                        </td>
+                        <td>${data.email}</td>
+                        <td>${(data.id == idUser && userRole === "user") ?  `<a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
+                                <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                <span class="btn-inner--text">Edit</span>
+                           </a>` : userRole === "admin" || userRole === "coach" ? `<a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit-user" title="edit data" data-user-id="${data.id}">
+                                <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                <span class="btn-inner--text">Edit</span>
+                           </a>` : `<button type="button" class="btn btn-default" disabled>Anda bukan user ini</button>` }
+                           
+                        </td>
+                    </tr>
+                `;    
+                }
+                
             });
             return result;
         }
@@ -209,8 +234,8 @@
             $('#statusUser').empty();
             $('#statusUser').append('<option value="">Pilih Status</option>');
         
+            let selectedContribution = '';
             if (currentEditingUserId) {
-                let selectedContribution = '';
                 $(document).on('change', '.list-contribution', function() {
                     selectedContribution = $(this).val();
                     const urlStatus = `${baseUrl}/api/v1/getStatus`;
@@ -239,7 +264,20 @@
                     
                     if (index == "image") return;
                     $('#editUserManagement').find(`[data-bind-${index}]`).val(data).attr('value', data);
-                
+                    if (index === 'id_contributions') { 
+                        if (data !== null || data !== undefined) {
+                            const urlStatus = `${baseUrl}/api/v1/getStatus`;
+                            ajaxData(urlStatus, 'GET', { "id": currentEditingUserId, "selectedContribution": data }, function(resp) {
+                                let dataStatus = resp.data;
+                                let statusOptions = '';
+                                statusOptions += `<option value="${dataStatus.id}">${dataStatus.description}</option>`;
+                                // dataStatus.forEach(element => {
+                                    
+                                // });
+                                $('#statusUser').html(statusOptions);
+                            });
+                        }
+                    }
                 
                 });
 

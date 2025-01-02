@@ -73,10 +73,8 @@
                     result += `
                         <tr>
                             <td>
-                                <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                </div>
+                                <div class="d-flex px-3 py-1">
+                    
                                 <div class="d-flex flex-column justify-content-center">
                                     <h6 class="mb-0 text-sm">${data.user.name}</h6>
                                 </div>

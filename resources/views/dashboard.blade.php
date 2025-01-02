@@ -166,7 +166,7 @@
 @endsection
 @section('content')
     <div class="row" >
-      <div class="all-card" id="all-card" >
+      <div class="all-card" style="z-index:1000; position: sticky; top: 0;" id="all-card" >
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
@@ -434,6 +434,62 @@
         </div>
       </div>
 
+      <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="activityModalLabel">
+                        <i class="ni ni-calendar-grid-58 mr-2"></i>Edit Event
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="activityForm">
+                        <input type="hidden" id="selectedDate" name="selected_date">
+                        <div class="form-group">
+                            <label for="activityTitle">Activity Title</label>
+                            <input type="hidden" name="repeater[0][event_name]" class="form-control"  value="edit_event">
+                            <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="not_null">
+                            <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
+                            <input type="text" name="repeater[0][activity]" class="form-control" id="activityTitle" data-bind-activity value="" placeholder="Add title" required disabled>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="activityDate">Date</label>
+                                    <input type="date" name="repeater[0][date_activity]" class="form-control" id="activityDate" data-bind-date_activity value="" required disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="activityTime">Start Time</label>
+                                    <input type="time" name="repeater[0][time_start_activity]" class="form-control" id="activityTime" data-bind-time_start_activity value="" required disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="activityTime">End Time</label>
+                                    <input type="time" name="repeater[0][time_end_activity]" class="form-control" id="activityTime" data-bind-time_end_activity value="" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="activityDescription">Location</label>
+                            <textarea class="form-control" name="repeater[0][location]" id="activityDescription" rows="3" placeholder="Add description" data-bind-location value="" required disabled></textarea>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!-- <button type="submit" form="activityForm" class="btn btn-primary" id="saveActivity">Save</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 
@@ -478,7 +534,8 @@
                               </div>
                               <div class="col-4 text-end">
                                 <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                  <img src="{{ asset('assets/img/groups.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
+                                  
                                 </div>
                               </div>
                             </div>
@@ -492,7 +549,7 @@
                           <div class="row">
                             <div class="col-8">
                               <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Member Trial Player</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Member Trial</p>
                                 <h5 class="font-weight-bolder">
                                   
                                 </h5>
@@ -504,7 +561,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                  <img src="{{ asset('assets/img/membertrial.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
                               </div>
                             </div>
                           </div>
@@ -529,7 +586,8 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                  <img src="{{ asset('assets/img/memberactive.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
+
                               </div>
                             </div>
                           </div>
@@ -553,7 +611,8 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/membernonactive.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
+
                               </div>
                             </div>
                           </div>
@@ -575,10 +634,8 @@
                        <tbody>
                          <tr>
                            <td class="w-30">
-                             <div class="d-flex px-2 py-1 align-items-center">
-                               <div>
-                                 <img src="../assets/img/icons/flags/ID.png" style="width: 40px; height: 40px;" alt="Country flag">
-                               </div>
+                             <div class="d-flex px-1 py-1 align-items-center">
+                               
                                <div class="ms-4">
                                  <p class="text-xs font-weight-bold mb-0">Nama</p>
                                  <h6 class="text-sm mb-0">${data.name}</h6>
@@ -588,7 +645,7 @@
                            <td>
                              <div class="text-center">
                                <p class="text-xs font-weight-bold mb-0">Status Iuran:</p>
-                               <h6 class="text-sm mb-0">${data.contribution.description}</h6>
+                               <h6 class="text-sm mb-0">${data.contribution == null ? "Belum ada Iuran" :data.contribution.description}</h6>
                              </div>
                            </td>
                          </tr>
@@ -633,7 +690,13 @@
                                         title: {
                                             display: true,
                                             text: 'Number of New Users'
-                                        }
+                                        },
+                                        ticks: {
+                                            stepSize: 1,
+                                            precision: 0
+                                        },
+                                        min: 0,
+                                        max: 3
                                     },
                                     x: {
                                         title: {
@@ -849,39 +912,39 @@
                               const activityMark = $('<div>')
                                   .addClass('activity-mark')
                                   .text(activityForDate.activity);
-                              // const eventActionButtons = $('<div>')
-                              //     .addClass('event-action-buttons mt-2')
-                              //     .append(
-                              //         $('<button>')
-                              //             .addClass('btn btn-sm btn-outline-primary btn-edit-event mr-1')
-                              //             .attr('data-event-id', activityForDate.id)
-                              //             .append(
-                              //                 $('<i>')
-                              //                     .addClass('fas fa-edit')
-                              //             )
-                              //             .append('Edit Event')
-                              //     )
-                              //     .append(
-                              //         $('<button>')
-                              //             .addClass('btn btn-sm btn-outline-success btn-add-participants mr-1')
-                              //             .attr('data-event-id', activityForDate.id)
-                              //             .append(
-                              //                 $('<i>')
-                              //                     .addClass('fas fa-user-plus')
-                              //             )
-                              //             .append('Add Participants')
-                              //     )
-                              //     .append(
-                              //         $('<button>')
-                              //             .addClass('btn btn-sm btn-outline-info btn-add-documentation')
-                              //             .attr('data-event-id', activityForDate.id)
-                              //             .append(
-                              //                 $('<i>')
-                              //                     .addClass('fas fa-file-upload')
-                              //             )
-                              //             .append('Add Documentation')
-                              //     );
-                              dayCell.append(activityMark);
+                              const eventActionButtons = $('<div>')
+                                  .addClass('event-action-buttons mt-2')
+                                  .append(
+                                      $('<button>')
+                                          .addClass('btn btn-sm btn-outline-primary btn-edit-event mr-1')
+                                          .attr('data-event-id', activityForDate.id)
+                                          .append(
+                                              $('<i>')
+                                                  .addClass('fas fa-edit')
+                                          )
+                                          .append('Detail Event')
+                                  );
+                                  // .append(
+                                  //     $('<button>')
+                                  //         .addClass('btn btn-sm btn-outline-success btn-add-participants mr-1')
+                                  //         .attr('data-event-id', activityForDate.id)
+                                  //         .append(
+                                  //             $('<i>')
+                                  //                 .addClass('fas fa-user-plus')
+                                  //         )
+                                  //         .append('Add Participants')
+                                  // )
+                                  // .append(
+                                  //     $('<button>')
+                                  //         .addClass('btn btn-sm btn-outline-info btn-add-documentation')
+                                  //         .attr('data-event-id', activityForDate.id)
+                                  //         .append(
+                                  //             $('<i>')
+                                  //                 .addClass('fas fa-file-upload')
+                                  //         )
+                                  //         .append('Add Documentation')
+                                  // );
+                              dayCell.append(activityMark).append(eventActionButtons);
                           }
                           
                           $('#calendarDays').append(dayCell);
@@ -1183,7 +1246,7 @@
                               </div>
                               <div class="col-4 text-end">
                                 <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                  <img src="{{ asset('assets/img/defend.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
                                 </div>
                               </div>
                             </div>
@@ -1209,7 +1272,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/forward.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
                               </div>
                             </div>
                           </div>
@@ -1234,7 +1297,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/goalkeeper.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
                               </div>
                             </div>
                           </div>
@@ -1258,7 +1321,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/midfielder.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10  center">
                               </div>
                             </div>
                           </div>
@@ -1280,10 +1343,8 @@
                      <tbody>
                        <tr>
                          <td class="w-30">
-                           <div class="d-flex px-2 py-1 align-items-center">
-                             <div>
-                               <img src="../assets/img/icons/flags/ID.png" style="width: 40px; height: 40px;" alt="Country flag">
-                             </div>
+                           <div class="d-flex px-1 py-1 align-items-center">
+                             
                              <div class="ms-4">
                                <p class="text-xs font-weight-bold mb-0">Nama</p>
                                <h6 class="text-sm mb-0">${data.name}</h6>

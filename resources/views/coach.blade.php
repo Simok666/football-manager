@@ -32,44 +32,57 @@
       <div class="modal-body">
       <form id="form-add-coachmanagement">
             <div class="mb-3">
+                <label for="exampleFormControlInput2">Email</label>
                 <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="null">
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email"  required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Telephone</label>
                 <input type="text" name="repeater[0][phone]" class="form-control" placeholder="No. Handphone" aria-label="No. Handphone" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Password</label>
                 <input type="password" name="repeater[0][password]" class="form-control" placeholder="Password" aria-label="Password" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">Name</label>
                 <input type="text" name="repeater[0][name]" class="form-control" placeholder="Name" aria-label="Name" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput1">NIK</label>
                 <input type="number" name="repeater[0][nik]" class="form-control" placeholder="NIK" aria-label="NIK" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tempat Lahir</label>
                 <input type="text" name="repeater[0][place_of_birth]" class="form-control" placeholder="Tempat Lahir" aria-label="Tempat Lahir" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tanggal Lahir</label>
                 <input type="date" name="repeater[0][date_of_birth]" class="form-control" placeholder="Tanggal Lahir" aria-label="Tanggal Lahir" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Alamat</label>
                 <input type="text" name="repeater[0][address]" class="form-control" placeholder="Alamat" aria-label="Alamat" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Status</label>
                 <input type="text" name="repeater[0][status]" class="form-control" placeholder="Status" aria-label="Status" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Kontak Darurat</label>
                 <input type="number" name="repeater[0][emergeny_contact]" class="form-control" placeholder="Kontak Darurat" aria-label="Kontak Darurat" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Berat Badan</label>
                 <input type="text" name="repeater[0][weight]" class="form-control" placeholder="Berat Badan" aria-label="Berat Badan"  >
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput1">Tinggi Badan</label>
                 <input type="text" name="repeater[0][height]" class="form-control" placeholder="Tinggi Badan" aria-label="Tinggi Badan"  >
             </div>
             <div class="mb-3">
-                <input type="text" name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" >
+            <label for="exampleFormControlInput1">Riwayat</label>
+                <textarea name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" > </textarea>
             </div>
          </form>
       </div>
@@ -93,45 +106,58 @@
       <div class="modal-body">
       <form id="form-edit-coachmanagement">
             <div class="mb-3">
+                <label for="exampleFormControlInput2">Email</label>
                 <input type="hidden" name="repeater[0][new_id]" class="form-control"  value="not_null">
                 <input type="hidden" name="repeater[0][id]" class="form-control" data-bind-id value="">
                 <input type="email" name="repeater[0][email]" class="form-control" placeholder="Email" aria-label="Email" data-bind-email value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput2">Telephone</label>
                 <input type="text" name="repeater[0][phone]" class="form-control" placeholder="No. Handphone" aria-label="No. Handphone" data-bind-phone value="" required>
             </div>
             <div class="mb-3">
+                <label for="exampleFormControlInput2">Password</label>
                 <input type="password" name="repeater[0][password]" class="form-control" placeholder="Password" aria-label="Password">
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Nama</label>
                 <input type="text" name="repeater[0][name]" class="form-control" placeholder="Name" aria-label="Name" data-bind-name value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">NIK</label>
                 <input type="number" name="repeater[0][nik]" class="form-control" placeholder="NIK" aria-label="NIK" data-bind-nik value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Tempat Lahir</label>
                 <input type="text" name="repeater[0][place_of_birth]" class="form-control" placeholder="Tempat Lahir" aria-label="Tempat Lahir" data-bind-place_of_birth value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Tanggal Lahir</label>
                 <input type="date" name="repeater[0][date_of_birth]" class="form-control" placeholder="Tanggal Lahir" aria-label="Tanggal Lahir" data-bind-date_of_birth value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Alamat</label>
                 <input type="text" name="repeater[0][address]" class="form-control" placeholder="Alamat" aria-label="Alamat" data-bind-address value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Status</label>
                 <input type="text" name="repeater[0][status]" class="form-control" placeholder="Status" aria-label="Status" data-bind-status value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Kontak Darurat</label>
                 <input type="number" name="repeater[0][emergeny_contact]" class="form-control" placeholder="Kontak Darurat" aria-label="Kontak Darurat" data-bind-emergeny_contact value="" required>
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Berat Badan</label>
                 <input type="text" name="repeater[0][weight]" class="form-control" placeholder="Berat Badan" aria-label="Berat Badan" data-bind-weight value="" >
             </div>
             <div class="mb-3">
+            <label for="exampleFormControlInput2">Tinggi Badan</label>
                 <input type="text" name="repeater[0][height]" class="form-control" placeholder="Tinggi Badan" aria-label="Tinggi Badan" data-bind-height value="" >
             </div>
             <div class="mb-3">
-                <input type="text" name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" data-bind-history value="">
+            <label for="exampleFormControlInput2">Riwayat</label>
+                <textarea name="repeater[0][history]" class="form-control" placeholder="Riwayat" aria-label="Riwayat" data-bind-history value=""> </textarea>
             </div>
          </form>
       </div>
@@ -159,13 +185,12 @@
                  
                 var result = "";
                 $.each(data, function(index, data) {
-                    result += `
+                    if (data.id == idUser && userRole === "coach") {
+                        result += `
                         <tr>
                             <td>
-                                <div class="d-flex px-2 py-1">
-                                <div>
-                                    <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                                </div>
+                                <div class="d-flex px-3 py-1">
+                            
                                 <div class="d-flex flex-column justify-content-center">
                                     <h6 class="mb-0 text-sm">${data.name}</h6>
                                     <p class="text-xs text-secondary mb-0">${data.nik ?? "Nik Belum Diisi"}</p>
@@ -187,7 +212,37 @@
                             
                             </td>
                         </tr>
-                    `
+                    `;
+                    } else if (userRole === "admin") {
+                        result += `
+                        <tr>
+                            <td>
+                                <div class="d-flex px-3 py-1">
+                                
+                                <div class="d-flex flex-column justify-content-center">
+                                    <h6 class="mb-0 text-sm">${data.name}</h6>
+                                    <p class="text-xs text-secondary mb-0">${data.nik ?? "Nik Belum Diisi"}</p>
+                                </div>
+                                </div>
+                            </td>
+                            <td>${data.email}</td>
+                            <td>
+                            ${(data.id == idUser && userRole === "coach") ? `
+                                <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
+                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                    <span class="btn-inner--text">Edit</span>
+                            </a>
+                            ` : userRole === "admin" ?  `
+                            <a  href="#" data-toggle="modal" data-target="#editModal" class="btn btn-success btn-icon btn-sm btn-edit" title="edit data" data-name="${data.name}" data-email="${data.email}" data-id="${data.id}">
+                                    <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
+                                    <span class="btn-inner--text">Edit</span>
+                            </a>` : `<button type="button" class="btn btn-default" disabled>Anda bukan coach ini</button>` }
+                            
+                            </td>
+                        </tr>
+                    `;
+                    }
+                    
                 });
                 return result;
             }
