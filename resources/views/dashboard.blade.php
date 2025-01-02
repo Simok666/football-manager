@@ -744,7 +744,7 @@
                               </div>
                               <div class="col-4 text-end">
                                 <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                  <img src="{{ asset('assets/img/statusplayer.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
                                 </div>
                               </div>
                             </div>
@@ -770,7 +770,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/attendence.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
                               </div>
                             </div>
                           </div>
@@ -795,7 +795,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/goal.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
                               </div>
                             </div>
                           </div>
@@ -820,7 +820,7 @@
                             </div>
                             <div class="col-4 text-end">
                               <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                                <img src="{{ asset('assets/img/generalscoring.svg') }}" alt="Example SVG" style="margin: 10px" class="text-lg opacity-10 center">
                               </div>
                             </div>
                           </div>
