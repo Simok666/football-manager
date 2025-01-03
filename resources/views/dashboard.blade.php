@@ -391,7 +391,7 @@
                 <h6 class="mb-2">Status Iuran Pembayaran</h6>
               </div>
             </div>
-            <div class="table-responsive" id="coachTable">
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;" id="coachTable">
               <table class="table align-items-center ">
                 <tbody>
                   <tr>
